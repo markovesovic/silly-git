@@ -1,0 +1,11 @@
+16:43:27 - prop file: src/main/resources/chord/servent_list.properties
+Host: 192.168.56.1, port: 1400
+16:43:27 - Starting servent [ 59 | 192.168.56.1:1400 ] 
+16:43:27 - Pausing for 20000 ms
+16:43:28 - Sending message [ from: 59 | 192.168.56.1:1400 | 0 | no_text | NEW_NODE | to: 192.168.56.1:1100 | 63 ]
+16:43:30 - Got message [ from: 63 | 192.168.56.1:1100 | 3 | no_text | WELCOME | to: 192.168.56.1:1400 | 59 ]
+16:43:31 - Sending message [ from: 59 | 192.168.56.1:1400 | 1 | no_text | UPDATE | to: 192.168.56.1:1100 | 63 ]
+16:43:34 - Got message [ from: 59 | 192.168.56.1:1400 | 3 | {192.168.56.1:1100},{192.168.56.1:1200},{192.168.56.1:1300} | UPDATE | to: 192.168.56.1:1400 | 59 ]
+16:43:34 - else: {192.168.56.1:1100},{192.168.56.1:1200},{192.168.56.1:1300}
+16:43:47 - Pausing for 10000 ms
+16:43:57 - Stopping...
