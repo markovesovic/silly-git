@@ -4,6 +4,7 @@ import app.AppConfig;
 import app.ServentInfo;
 import servent.message.Message;
 import servent.message.MessageType;
+import servent.message.NewNodeReleaseLockMessage;
 import servent.message.UpdateMessage;
 import servent.message.util.MessageUtil;
 
@@ -29,10 +30,7 @@ public class UpdateHandler implements MessageHandler {
 			if (clientMessage.getSenderServentInfo().getListenerPort() != AppConfig.myServentInfo.getListenerPort()
 					|| !clientMessage.getSenderServentInfo().getIpAddress().equals(AppConfig.myServentInfo.getIpAddress())) {
 
-				ServentInfo newNodeInfo = new ServentInfo(
-						clientMessage.getSenderServentInfo().getIpAddress(),
-						clientMessage.getSenderServentInfo().getListenerPort()
-				);
+				ServentInfo newNodeInfo = clientMessage.getSenderServentInfo();
 
 				List<ServentInfo> newNodes = new ArrayList<>();
 				newNodes.add(newNodeInfo);
@@ -68,6 +66,9 @@ public class UpdateHandler implements MessageHandler {
 					allNodes.add(new ServentInfo(ipAddress, Integer.parseInt(port)));
 				}
 				AppConfig.chordState.addNodes(allNodes);
+
+				NewNodeReleaseLockMessage newNodeReleaseLockMessage = new NewNodeReleaseLockMessage(AppConfig.myServentInfo, AppConfig.chordState.getNextNodeServentInfo());
+				MessageUtil.sendMessage(newNodeReleaseLockMessage);
 
 			}
 		} catch (Exception e) {

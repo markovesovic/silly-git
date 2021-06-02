@@ -25,7 +25,7 @@ public class AppConfig {
 
 	public static void readConfig(String configName, int serventID) {
 		configName += "servent_list.properties";
-		AppConfig.timestampedStandardPrint("prop file: " + configName);
+//		AppConfig.timestampedStandardPrint("prop file: " + configName);
 
 		Properties properties = new Properties();
 		try {
@@ -116,7 +116,7 @@ public class AppConfig {
 			System.exit(-1);
 		}
 
-		System.out.println("Host: " + serventHost + ", port: " + serventPort + ", chordID: " + ChordState.chordHash(serventHost, serventPort));
+//		System.out.println("Host: " + serventHost + ", port: " + serventPort + ", chordID: " + ChordState.chordHash(serventHost, serventPort));
 
 		myServentInfo = new ServentInfo(serventHost, serventPort);
 	}

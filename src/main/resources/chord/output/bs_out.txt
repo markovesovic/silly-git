@@ -1,10 +1,10 @@
-16:43:22 - Bootstrap server started on port: 2001
+19:30:29 - Bootstrap server started on port: 2001
 GOT -- port: 1100, ip: 192.168.56.1; from address: 127.0.0.1
 GOT -- port: 1200, ip: 192.168.56.1; from address: 127.0.0.1
 GOT -- port: 1300, ip: 192.168.56.1; from address: 127.0.0.1
 GOT -- port: 1400, ip: 192.168.56.1; from address: 127.0.0.1
-adding 1300, from: 192.168.56.1
 adding 1200, from: 192.168.56.1
 GOT -- port: 1500, ip: 192.168.56.1; from address: 127.0.0.1
+adding 1300, from: 192.168.56.1
 adding 1400, from: 192.168.56.1
 adding 1500, from: 192.168.56.1

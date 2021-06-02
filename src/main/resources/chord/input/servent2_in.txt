@@ -1,3 +1,4 @@
 pause 30000
 pause 10000
+test
 stop

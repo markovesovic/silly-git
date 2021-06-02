@@ -2,6 +2,7 @@ package servent.message.util;
 
 import app.AppConfig;
 import servent.message.Message;
+import servent.message.MessageType;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -24,7 +25,7 @@ public class DelayedMessageSender implements Runnable {
 			e1.printStackTrace();
 		}
 		
-		if (MessageUtil.MESSAGE_UTIL_PRINTING) {
+		if (MessageUtil.MESSAGE_UTIL_PRINTING && messageToSend.getMessageType() != MessageType.TOKEN_MESSAGE) {
 			AppConfig.timestampedStandardPrint("Sending message " + messageToSend);
 		}
 		

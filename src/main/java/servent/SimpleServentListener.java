@@ -4,6 +4,7 @@ import app.AppConfig;
 import app.Cancellable;
 import servent.handler.*;
 import servent.message.Message;
+import servent.message.NewNodeReleaseLockMessage;
 import servent.message.util.MessageUtil;
 
 import java.io.IOException;
@@ -69,6 +70,16 @@ public class SimpleServentListener implements Runnable, Cancellable {
 					case POISON:
 						break;
 
+
+					case TOKEN_MESSAGE: {
+						messageHandler = new TokenHandler(clientMessage);
+						break;
+					}
+
+					case NEW_NODE_RELEASE_LOCK_MESSAGE: {
+						messageHandler = new NewNodeReleaseLockHandler(clientMessage);
+						break;
+					}
 
 
 					case ADD_FILE_MESSAGE: {

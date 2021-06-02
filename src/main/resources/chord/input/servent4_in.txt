@@ -3,4 +3,5 @@ dht_put 25 3
 pause 4000
 dht_get 25
 pause 6000
+test
 stop

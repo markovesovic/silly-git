@@ -1,6 +1,7 @@
 package servent.handler;
 
 import app.AppConfig;
+import app.DistributedMutex;
 import app.ServentInfo;
 import servent.message.*;
 import servent.message.util.MessageUtil;
@@ -25,9 +26,7 @@ public class NewNodeHandler implements MessageHandler {
 				return;
 			}
 
-			ServentInfo newNodeInfo = new ServentInfo(
-					clientMessage.getSenderServentInfo().getIpAddress(),
-					clientMessage.getSenderServentInfo().getListenerPort());
+			ServentInfo newNodeInfo = clientMessage.getSenderServentInfo();
 
 			//check if the new node collides with another existing node.
 			if (AppConfig.chordState.isCollision(newNodeInfo.getChordId())) {
@@ -40,6 +39,11 @@ public class NewNodeHandler implements MessageHandler {
 			boolean isMyPred = AppConfig.chordState.isKeyMine(newNodeInfo.getChordId());
 
 			if (isMyPred) { //if yes, prepare and send welcome message
+				AppConfig.timestampedStandardPrint("New node handler before lock");
+				DistributedMutex.lock();
+				AppConfig.timestampedStandardPrint("New node handler after lock");
+
+
 				ServentInfo hisPred = AppConfig.chordState.getPredecessor();
 				if (hisPred == null) {
 					hisPred = AppConfig.myServentInfo;

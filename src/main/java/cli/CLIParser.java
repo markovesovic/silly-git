@@ -47,6 +47,8 @@ public class CLIParser implements Runnable, Cancellable {
 		commandList.add(new CommitFileCommand());
 		commandList.add(new RemoveFileCommand());
 		commandList.add(new PullFileCommand());
+
+		commandList.add(new TestCommand());
 	}
 	
 	@Override

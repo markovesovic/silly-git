@@ -1,28 +1,38 @@
-16:43:24 - prop file: src/main/resources/chord/servent_list.properties
-Host: 192.168.56.1, port: 1100
-16:43:24 - Starting servent [ 63 | 192.168.56.1:1100 ] 
-16:43:24 - Pausing for 50000 ms
-16:43:24 - First node in Chord system.
-16:43:26 - Got message [ from: 19 | 192.168.56.1:1200 | 0 | no_text | NEW_NODE | to: 192.168.56.1:1100 | 63 ]
-16:43:27 - Got message [ from: 39 | 192.168.56.1:1300 | 0 | no_text | NEW_NODE | to: 192.168.56.1:1100 | 63 ]
-16:43:27 - Sending message [ from: 63 | 192.168.56.1:1100 | 1 | no_text | WELCOME | to: 192.168.56.1:1300 | 39 ]
-16:43:27 - Sending message [ from: 63 | 192.168.56.1:1100 | 0 | no_text | WELCOME | to: 192.168.56.1:1200 | 19 ]
-16:43:28 - Got message [ from: 19 | 192.168.56.1:1200 | 1 | no_text | UPDATE | to: 192.168.56.1:1100 | 63 ]
-16:43:28 - if
-16:43:28 - Got message [ from: 59 | 192.168.56.1:1400 | 0 | no_text | NEW_NODE | to: 192.168.56.1:1100 | 63 ]
-16:43:29 - Got message [ from: 39 | 192.168.56.1:1300 | 1 | no_text | UPDATE | to: 192.168.56.1:1100 | 63 ]
-16:43:29 - if
-16:43:29 - Got message [ from: 15 | 192.168.56.1:1500 | 0 | no_text | NEW_NODE | to: 192.168.56.1:1100 | 63 ]
-16:43:29 - Sending message [ from: 19 | 192.168.56.1:1200 | 2 | {192.168.56.1:1100} | UPDATE | to: 192.168.56.1:1200 | 19 ]
-16:43:29 - Sending message [ from: 15 | 192.168.56.1:1500 | 5 | no_text | NEW_NODE | to: 192.168.56.1:1200 | 19 ]
-16:43:30 - Sending message [ from: 39 | 192.168.56.1:1300 | 4 | {192.168.56.1:1100} | UPDATE | to: 192.168.56.1:1200 | 19 ]
-16:43:30 - Sending message [ from: 63 | 192.168.56.1:1100 | 3 | no_text | WELCOME | to: 192.168.56.1:1400 | 59 ]
-16:43:31 - Got message [ from: 59 | 192.168.56.1:1400 | 1 | no_text | UPDATE | to: 192.168.56.1:1100 | 63 ]
-16:43:31 - if
-16:43:32 - Sending message [ from: 59 | 192.168.56.1:1400 | 6 | {192.168.56.1:1100} | UPDATE | to: 192.168.56.1:1200 | 19 ]
-16:43:33 - Got message [ from: 15 | 192.168.56.1:1500 | 2 | {192.168.56.1:1200},{192.168.56.1:1300} | UPDATE | to: 192.168.56.1:1100 | 63 ]
-16:43:33 - if
-16:43:35 - Sending message [ from: 15 | 192.168.56.1:1500 | 7 | {192.168.56.1:1200},{192.168.56.1:1300},{192.168.56.1:1100} | UPDATE | to: 192.168.56.1:1500 | 15 ]
-16:44:14 - Pausing for 10000 ms
-16:44:15 - Sending message [ from: 63 | 192.168.56.1:1100 | 8 | 2:5 | PUT | to: 192.168.56.1:1500 | 15 ]
-16:44:24 - Stopping...
+19:30:31 - prop file: src/main/resources/chord/servent_list.properties
+Host: 192.168.56.1, port: 1100, chordID: 63
+19:30:31 - Starting servent [ 63 | 192.168.56.1:1100 ] 
+19:30:31 - Pausing for 50000 ms
+19:30:31 - First node in Chord system.
+19:30:33 - Got message [ from: 19 | 192.168.56.1:1200 | 0 | no_text | NEW_NODE | to: 192.168.56.1:1100 | 63 ]
+19:30:33 - New node handler before lock
+19:30:33 - Waiting for lock in while loop
+19:30:33 - New node handler after lock
+19:30:34 - Got message [ from: 39 | 192.168.56.1:1300 | 0 | no_text | NEW_NODE | to: 192.168.56.1:1100 | 63 ]
+19:30:34 - New node handler before lock
+19:30:34 - New node handler after lock
+19:30:34 - Sending message [ from: 63 | 192.168.56.1:1100 | 0 | no_text | WELCOME | to: 192.168.56.1:1200 | 19 ]
+19:30:35 - Got message [ from: 59 | 192.168.56.1:1400 | 0 | no_text | NEW_NODE | to: 192.168.56.1:1100 | 63 ]
+19:30:35 - New node handler before lock
+19:30:35 - New node handler after lock
+19:30:35 - Got message [ from: 19 | 192.168.56.1:1200 | 1 | no_text | UPDATE | to: 192.168.56.1:1100 | 63 ]
+19:30:35 - Got message [ from: 15 | 192.168.56.1:1500 | 0 | no_text | NEW_NODE | to: 192.168.56.1:1100 | 63 ]
+19:30:36 - Sending message [ from: 63 | 192.168.56.1:1100 | 1 | no_text | WELCOME | to: 192.168.56.1:1300 | 39 ]
+19:30:36 - Sending message [ from: 63 | 192.168.56.1:1100 | 2 | no_text | WELCOME | to: 192.168.56.1:1400 | 59 ]
+19:30:36 - Got message [ from: 39 | 192.168.56.1:1300 | 1 | no_text | UPDATE | to: 192.168.56.1:1100 | 63 ]
+19:30:36 - Sending message [ from: 19 | 192.168.56.1:1200 | 3 | {192.168.56.1:1100} | UPDATE | to: 192.168.56.1:1200 | 19 ]
+19:30:37 - Got message [ from: 59 | 192.168.56.1:1400 | 1 | no_text | UPDATE | to: 192.168.56.1:1100 | 63 ]
+19:30:37 - Sending message [ from: 15 | 192.168.56.1:1500 | 4 | no_text | NEW_NODE | to: 192.168.56.1:1200 | 19 ]
+19:30:37 - Sending message [ from: 39 | 192.168.56.1:1300 | 5 | {192.168.56.1:1100} | UPDATE | to: 192.168.56.1:1200 | 19 ]
+19:30:38 - Got message [ from: 19 | 192.168.56.1:1200 | 2 | no_text | NEW_NODE_RELEASE_LOCK_MESSAGE | to: 192.168.56.1:1100 | 63 ]
+19:30:38 - Sending message [ from: 59 | 192.168.56.1:1400 | 6 | {192.168.56.1:1100} | UPDATE | to: 192.168.56.1:1200 | 19 ]
+19:30:39 - Got message [ from: 39 | 192.168.56.1:1300 | 2 | no_text | NEW_NODE_RELEASE_LOCK_MESSAGE | to: 192.168.56.1:1100 | 63 ]
+19:30:41 - Got message [ from: 59 | 192.168.56.1:1400 | 2 | no_text | NEW_NODE_RELEASE_LOCK_MESSAGE | to: 192.168.56.1:1100 | 63 ]
+19:30:43 - Got message [ from: 15 | 192.168.56.1:1500 | 3 | {192.168.56.1:1200},{192.168.56.1:1300},{192.168.56.1:1400} | UPDATE | to: 192.168.56.1:1100 | 63 ]
+19:30:44 - Sending message [ from: 15 | 192.168.56.1:1500 | 10 | {192.168.56.1:1200},{192.168.56.1:1300},{192.168.56.1:1400},{192.168.56.1:1100} | UPDATE | to: 192.168.56.1:1500 | 15 ]
+19:31:21 - Pausing for 10000 ms
+19:31:21 - Sending message [ from: 63 | 192.168.56.1:1100 | 14 | 2:5 | PUT | to: 192.168.56.1:1500 | 15 ]
+19:31:31 - [ 15 | 192.168.56.1:1500 ] 
+19:31:31 - [ 19 | 192.168.56.1:1200 ] 
+19:31:31 - [ 39 | 192.168.56.1:1300 ] 
+19:31:31 - [ 59 | 192.168.56.1:1400 ] 
+19:31:31 - Stopping...

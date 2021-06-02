@@ -111,10 +111,10 @@ public class MultipleServentStarter {
 				e.printStackTrace();
 			}
 		}
-		
 		AppConfig.timestampedStandardPrint("All servent processes finished. Type \"stop\" to halt bootstrap.");
 		try {
 			assert bsProcess != null : "Bootstrap is null";
+			bsProcess.destroy();
 			bsProcess.waitFor();
 		} catch (InterruptedException e) {
 			e.printStackTrace();

@@ -15,10 +15,6 @@ public class ChordState {
 
 	public static int CHORD_SIZE;
 
-//	public static int chordHash(int value) {
-//		return 61 * value % CHORD_SIZE;
-//	}
-
 	public static int chordHash(String ip, int port) {
 		return ((61 * port) % CHORD_SIZE + ip.hashCode() % CHORD_SIZE) % CHORD_SIZE;
 	}
@@ -34,7 +30,7 @@ public class ChordState {
 	private Map<Integer, Integer> valueMap;
 
 
-	private Map<String, Integer> currentNewestVersion;
+	private final Map<String, Integer> currentNewestVersion;
 
 	
 	public ChordState() {
@@ -84,6 +80,10 @@ public class ChordState {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public List<ServentInfo> getAllNodeInfo() {
+		return this.allNodeInfo;
 	}
 	
 	public int getChordLevel() {

@@ -2,6 +2,7 @@ package servent.message.util;
 
 import app.AppConfig;
 import servent.message.Message;
+import servent.message.MessageType;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -27,8 +28,9 @@ public class MessageUtil {
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
-		
-		if (MESSAGE_UTIL_PRINTING) {
+
+		assert clientMessage != null;
+		if (MESSAGE_UTIL_PRINTING && clientMessage.getMessageType() != MessageType.TOKEN_MESSAGE) {
 			AppConfig.timestampedStandardPrint("Got message " + clientMessage);
 		}
 				

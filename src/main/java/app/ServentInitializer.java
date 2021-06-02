@@ -57,6 +57,7 @@ public class ServentInitializer implements Runnable {
 
 		if (someServentInfo.getListenerPort() == -1) { //bootstrap gave us -1 -> we are first
 			AppConfig.timestampedStandardPrint("First node in Chord system.");
+			DistributedMutex.receiveToken();
 			return;
 		}
 
