@@ -9,8 +9,25 @@ public final class DistributedMutex {
 
     public static final AtomicBoolean gotToken = new AtomicBoolean(false);
     public static final AtomicBoolean wantLock = new AtomicBoolean(false);
+    public static final AtomicBoolean localLock = new AtomicBoolean(false);
+
+    // TODO: Implement lock for local thread race
 
     public static void lock() {
+
+        boolean acquired = false;
+        while(!acquired) {
+            if(!localLock.get()) {
+                acquired = localLock.compareAndSet(false, true);
+            }
+            try {
+                Thread.sleep(250);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+
         wantLock.set(true);
 
         while(!gotToken.get()) {
@@ -27,6 +44,8 @@ public final class DistributedMutex {
         gotToken.set(false);
         wantLock.set(false);
         sendTokenForward();
+
+        localLock.set(false);
     }
 
     public static void receiveToken() {

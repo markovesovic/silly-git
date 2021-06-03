@@ -10,6 +10,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class ChordState {
 
@@ -30,9 +31,6 @@ public class ChordState {
 	private Map<Integer, Integer> valueMap;
 
 
-	private final Map<String, Integer> currentNewestVersion;
-
-	
 	public ChordState() {
 		this.chordLevel = 1;
 		int tmp = CHORD_SIZE;
@@ -51,8 +49,7 @@ public class ChordState {
 		
 		predecessorInfo = null;
 		valueMap = new HashMap<>();
-		allNodeInfo = new ArrayList<>();
-		currentNewestVersion = new ConcurrentHashMap<>();
+		allNodeInfo = new CopyOnWriteArrayList<>();
 	}
 	
 	/**
@@ -251,30 +248,73 @@ public class ChordState {
 
 	public void addNodes(List<ServentInfo> newNodes) {
 		allNodeInfo.addAll(newNodes);
-		
+
+		updateNodes();
+//		allNodeInfo.sort(Comparator.comparingInt(ServentInfo::getChordId));
+//
+//		List<ServentInfo> newList = new ArrayList<>();
+//		List<ServentInfo> newList2 = new ArrayList<>();
+//
+//		int myId = AppConfig.myServentInfo.getChordId();
+//		for (ServentInfo serventInfo : allNodeInfo) {
+//			if (serventInfo.getChordId() < myId) {
+//				newList2.add(serventInfo);
+//			} else {
+//				newList.add(serventInfo);
+//			}
+//		}
+//
+//		allNodeInfo.clear();
+//		allNodeInfo.addAll(newList);
+//		allNodeInfo.addAll(newList2);
+//		if (newList2.size() > 0) {
+//			predecessorInfo = newList2.get(newList2.size()-1);
+//		} else {
+//			predecessorInfo = newList.get(newList.size()-1);
+//		}
+//
+//		updateSuccessorTable();
+	}
+
+	public void removeNodes(List<ServentInfo> oldNodes) {
+
+		AppConfig.timestampedStandardPrint("All nodes before removing: " + allNodeInfo);
+//		allNodeInfo.removeAll(oldNodes);
+		oldNodes.forEach(nodeToRemove -> {
+			allNodeInfo.forEach(node -> {
+				if(node.getListenerPort() == nodeToRemove.getListenerPort() &&
+							node.getIpAddress().equals(nodeToRemove.getIpAddress())) {
+					allNodeInfo.remove(node);
+				}
+			});
+		});
+		AppConfig.timestampedStandardPrint("All nodes after removing: " + allNodeInfo);
+
+		updateNodes();
+	}
+
+	private void updateNodes() {
 		allNodeInfo.sort(Comparator.comparingInt(ServentInfo::getChordId));
-		
+
 		List<ServentInfo> newList = new ArrayList<>();
 		List<ServentInfo> newList2 = new ArrayList<>();
-		
-		int myId = AppConfig.myServentInfo.getChordId();
-		for (ServentInfo serventInfo : allNodeInfo) {
-			if (serventInfo.getChordId() < myId) {
+
+		int myID = AppConfig.myServentInfo.getChordId();
+		for(ServentInfo serventInfo : allNodeInfo) {
+			if(serventInfo.getChordId() < myID) {
 				newList2.add(serventInfo);
-			} else {
-				newList.add(serventInfo);
+				continue;
 			}
+			newList.add(serventInfo);
 		}
-		
 		allNodeInfo.clear();
 		allNodeInfo.addAll(newList);
 		allNodeInfo.addAll(newList2);
-		if (newList2.size() > 0) {
-			predecessorInfo = newList2.get(newList2.size()-1);
+		if(newList2.size() > 0) {
+			predecessorInfo = newList2.get(newList2.size() - 1);
 		} else {
-			predecessorInfo = newList.get(newList.size()-1);
+			predecessorInfo = newList.get(newList.size() - 1);
 		}
-		
 		updateSuccessorTable();
 	}
 
@@ -301,6 +341,10 @@ public class ChordState {
 	}
 
 
+	private final Map<String, Map<Integer, List<String>>> warehouseFiles = new ConcurrentHashMap<>();
+	private final Map<String, List<String>> warehouseDirectoryFiles = new ConcurrentHashMap<>();
+	private final Map<String, List<String>> warehouseDirectoryDirectories = new ConcurrentHashMap<>();
+
 	// My implementation
 	public void addFile(String filePath, List<String> content) {
 		int filePathHash = (filePath.hashCode() > 0 ? filePath.hashCode() : -filePath.hashCode()) % CHORD_SIZE;
@@ -309,24 +353,18 @@ public class ChordState {
 
 			AppConfig.timestampedStandardPrint("File content: " + content);
 
-			File file = new File(AppConfig.WAREHOUSE_PATH + filePath + "_0");
-			try {
-				if(!file.createNewFile()) {
-					AppConfig.timestampedErrorPrint("File already existed, use commit instead of add");
-					return;
-				}
-				AppConfig.timestampedStandardPrint("File created");
-
-				currentNewestVersion.put(filePath, 0);
-
-				FileWriter writer = new FileWriter(file);
-				for(String str: content) {
-					writer.write(str + System.lineSeparator());
-				}
-				writer.close();
-			} catch (IOException e) {
-				e.printStackTrace();
+			if(warehouseFiles.containsKey(filePath)) {
+				AppConfig.timestampedStandardPrint("Fail");
+				// TODO: Send message that file is already added
+				return;
 			}
+
+			Map<Integer, List<String>> newMap = new ConcurrentHashMap<>();
+			newMap.put(0, content);
+			warehouseFiles.put(filePath, newMap);
+
+			AppConfig.timestampedStandardPrint("Success");
+			// TODO: Send message that file is successfully added
 
 			return;
 		}
@@ -336,6 +374,22 @@ public class ChordState {
 		MessageUtil.sendMessage(addFileMessage);
 	}
 
+	public void addDirectory(String dirPath, List<String> files, List<String> dirs) {
+		int dirPathHash = (dirPath.hashCode() > 0 ? dirPath.hashCode() : -dirPath.hashCode()) % CHORD_SIZE;
+
+		if( isKeyMine(dirPathHash) ) {
+			if(warehouseDirectoryDirectories.containsKey(dirPath) || warehouseDirectoryFiles.containsKey(dirPath)) {
+				AppConfig.timestampedStandardPrint("Dir already in system");
+				return;
+			}
+
+			warehouseDirectoryFiles.put(dirPath, files);
+			warehouseDirectoryDirectories.put(dirPath, dirs);
+
+		}
+
+	}
+
 	public void commitFile(String filePath, List<String> content) {
 		int filePathHash = (filePath.hashCode() > 0 ? filePath.hashCode() : -filePath.hashCode()) % CHORD_SIZE;
 
@@ -343,33 +397,22 @@ public class ChordState {
 
 			AppConfig.timestampedStandardPrint("File content: " + content);
 
-			if(currentNewestVersion.get(filePath) == null) {
-				AppConfig.timestampedErrorPrint("File has not been added to system, use add instead!");
+			if(!warehouseFiles.containsKey(filePath)) {
+				AppConfig.timestampedStandardPrint("Fail");
+				//TODO: Send message that file is not being tracked
 				return;
 			}
 
-			int currentVersion = currentNewestVersion.get(filePath) + 1;
-			currentNewestVersion.put(filePath, currentVersion);
-
-			File file = new File(AppConfig.WAREHOUSE_PATH + filePath + "_" + currentVersion);
-			try {
-				if(!file.createNewFile()) {
-					AppConfig.timestampedErrorPrint("File already existed, use commit instead of add");
-					return;
+			Map<Integer, List<String>> allFileVersions = warehouseFiles.get(filePath);
+			int maxVersion = 0;
+			for(int key : allFileVersions.keySet()) {
+				if(key > maxVersion) {
+					maxVersion = key;
 				}
-				AppConfig.timestampedStandardPrint("File created");
-
-				currentNewestVersion.put(filePath, currentVersion);
-
-				FileWriter writer = new FileWriter(file);
-				for(String str: content) {
-					writer.write(str + System.lineSeparator());
-				}
-				writer.flush();
-				writer.close();
-			} catch (IOException e) {
-				e.printStackTrace();
 			}
+			allFileVersions.put(maxVersion, content);
+			AppConfig.timestampedStandardPrint("Success");
+			// TODO: Send message that commit was successful
 
 			return;
 		}
@@ -377,27 +420,23 @@ public class ChordState {
 		ServentInfo nextNode = getNextNodeForKey(filePathHash);
 		CommitFileMessage commitFileMessage = new CommitFileMessage(AppConfig.myServentInfo, nextNode, filePath, content);
 		MessageUtil.sendMessage(commitFileMessage);
-	}
+}
 
 	public void removeFile(String filePath) {
 		int filePathHash = (filePath.hashCode() > 0 ? filePath.hashCode() : -filePath.hashCode()) % CHORD_SIZE;
 
 		if( isKeyMine(filePathHash) ) {
 
-			if(currentNewestVersion.get(filePath) == null) {
-				AppConfig.timestampedErrorPrint("Cannot remove file because it is not tracked");
+			if(!warehouseFiles.containsKey(filePath)) {
+				AppConfig.timestampedStandardPrint("Fail");
+				// TODO: Send message that file is not being tracked
 				return;
 			}
-			int newestVersion = currentNewestVersion.get(filePath);
-			currentNewestVersion.remove(filePath);
 
-			for(int i = 0; i <= newestVersion; i++) {
-				if(new File(AppConfig.WAREHOUSE_PATH + filePath + "_" + i).delete()) {
-					AppConfig.timestampedStandardPrint("Successfully removed file");
-					continue;
-				}
-				AppConfig.timestampedErrorPrint("Failed to remove file!");
-			}
+			warehouseFiles.remove(filePath);
+			AppConfig.timestampedStandardPrint("Success");
+			// TODO: Send message that file is successfully removed
+
 
 			return;
 		}
@@ -410,32 +449,29 @@ public class ChordState {
 		int filePathHash = (filePath.hashCode() > 0 ? filePath.hashCode() : -filePath.hashCode()) % CHORD_SIZE;
 
 		if( isKeyMine(filePathHash) ) {
-			if( currentNewestVersion.get(filePath) == null ) {
+
+			if(!warehouseFiles.containsKey(filePath)) {
+				// TODO: Send message that file is not being tracked
 				return null;
 			}
-			version = version == -1 ? currentNewestVersion.get(filePath) : version;
 
-			try {
-				List<String> lines = Files.readAllLines(Paths.get(AppConfig.WAREHOUSE_PATH + filePath + "_" + version));
+			Map<Integer, List<String>> allFileVersions = warehouseFiles.get(filePath);
 
-
-				File file = new File(AppConfig.ROOT_PATH + filePath);
-
-				file.delete();
-				file.createNewFile();
-
-				FileWriter writer = new FileWriter(file);
-				for(String str: lines) {
-					writer.write(str + System.lineSeparator());
+			if(version == -1) {
+				for(int key : allFileVersions.keySet()) {
+					if(key > version) {
+						version = key;
+					}
 				}
-				writer.flush();
-				writer.close();
-
-				return new PullFileResponse(filePath, lines);
-
-			} catch (IOException e) {
-				e.printStackTrace();
 			}
+			if(!allFileVersions.containsKey(version)) {
+				// TODO: Send message that given version does not exist
+				AppConfig.timestampedStandardPrint("Version does not exist");
+				return null;
+			}
+
+			List<String> fileContent = allFileVersions.get(version);
+			return new PullFileResponse(filePath, fileContent);
 
 		}
 
@@ -446,7 +482,4 @@ public class ChordState {
 		return new PullFileResponse("", null);
 	}
 
-	public Map<String, Integer> getCurrentNewestVersion() {
-		return currentNewestVersion;
-	}
 }

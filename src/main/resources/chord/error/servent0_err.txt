@@ -1,2 +1,0 @@
-19:31:00 - Couldn't send message: [ from: 63 | 192.168.56.1:1100 | 13 | no_text | TOKEN_MESSAGE | to: 192.168.56.1:1500 | 15 ]
-19:31:22 - Couldn't send message: [ from: 63 | 192.168.56.1:1100 | 14 | 2:5 | PUT | to: 192.168.56.1:1500 | 15 ]

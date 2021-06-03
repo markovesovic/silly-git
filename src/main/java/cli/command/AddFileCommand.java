@@ -30,6 +30,7 @@ public class AddFileCommand implements CLICommand {
 //                    System.out.println("file rel path: " + f.getPath());
 //                }
 //            }
+            //Files.walk
 
             List<String> lines = Files.readAllLines(Paths.get(AppConfig.ROOT_PATH + args));
 

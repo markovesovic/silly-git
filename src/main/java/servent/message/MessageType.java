@@ -10,6 +10,8 @@ public enum MessageType {
 	TELL_GET,
 	POISON,
 
+	EXIT_MESSAGE,
+
 	TOKEN_MESSAGE,
 
 	NEW_NODE_RELEASE_LOCK_MESSAGE,

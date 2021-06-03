@@ -81,6 +81,11 @@ public class SimpleServentListener implements Runnable, Cancellable {
 						break;
 					}
 
+					case EXIT_MESSAGE: {
+						messageHandler = new ExitHandler(clientMessage, this);
+						break;
+					}
+
 
 					case ADD_FILE_MESSAGE: {
 						messageHandler = new AddFileHandler(clientMessage);

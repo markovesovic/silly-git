@@ -1,41 +1,33 @@
-19:30:32 - prop file: src/main/resources/chord/servent_list.properties
-Host: 192.168.56.1, port: 1200, chordID: 19
-19:30:32 - Starting servent [ 19 | 192.168.56.1:1200 ] 
-19:30:32 - Pausing for 40000 ms
-19:30:33 - Sending message [ from: 19 | 192.168.56.1:1200 | 0 | no_text | NEW_NODE | to: 192.168.56.1:1100 | 63 ]
-19:30:34 - Got message [ from: 63 | 192.168.56.1:1100 | 0 | no_text | WELCOME | to: 192.168.56.1:1200 | 19 ]
-19:30:35 - Sending message [ from: 19 | 192.168.56.1:1200 | 1 | no_text | UPDATE | to: 192.168.56.1:1100 | 63 ]
-19:30:36 - Got message [ from: 19 | 192.168.56.1:1200 | 3 | {192.168.56.1:1100} | UPDATE | to: 192.168.56.1:1200 | 19 ]
-19:30:37 - Got message [ from: 15 | 192.168.56.1:1500 | 4 | no_text | NEW_NODE | to: 192.168.56.1:1200 | 19 ]
-19:30:37 - New node handler before lock
-19:30:37 - Waiting for lock in while loop
-19:30:37 - Waiting for lock in while loop
-19:30:37 - Waiting for lock in while loop
-19:30:37 - Got message [ from: 39 | 192.168.56.1:1300 | 5 | {192.168.56.1:1100} | UPDATE | to: 192.168.56.1:1200 | 19 ]
-19:30:38 - Waiting for lock in while loop
-19:30:38 - Sending message [ from: 19 | 192.168.56.1:1200 | 2 | no_text | NEW_NODE_RELEASE_LOCK_MESSAGE | to: 192.168.56.1:1100 | 63 ]
-19:30:38 - Got message [ from: 59 | 192.168.56.1:1400 | 6 | {192.168.56.1:1100} | UPDATE | to: 192.168.56.1:1200 | 19 ]
-19:30:38 - Waiting for lock in while loop
-19:30:38 - Sending message [ from: 39 | 192.168.56.1:1300 | 3 | {192.168.56.1:1100},{192.168.56.1:1200} | UPDATE | to: 192.168.56.1:1300 | 39 ]
-19:30:38 - Waiting for lock in while loop
-19:30:38 - Waiting for lock in while loop
-19:30:39 - Waiting for lock in while loop
-19:30:39 - Sending message [ from: 59 | 192.168.56.1:1400 | 4 | {192.168.56.1:1100},{192.168.56.1:1200} | UPDATE | to: 192.168.56.1:1300 | 39 ]
-19:30:39 - New node handler after lock
-19:30:40 - Sending message [ from: 19 | 192.168.56.1:1200 | 5 | no_text | WELCOME | to: 192.168.56.1:1500 | 15 ]
-19:30:41 - Got message [ from: 15 | 192.168.56.1:1500 | 1 | no_text | UPDATE | to: 192.168.56.1:1200 | 19 ]
-19:30:42 - Sending message [ from: 15 | 192.168.56.1:1500 | 6 | {192.168.56.1:1200} | UPDATE | to: 192.168.56.1:1300 | 39 ]
-19:30:45 - Got message [ from: 15 | 192.168.56.1:1500 | 2 | no_text | NEW_NODE_RELEASE_LOCK_MESSAGE | to: 192.168.56.1:1200 | 19 ]
-19:30:45 - Got message [ from: 15 | 192.168.56.1:1500 | 3 | 25:3 | PUT | to: 192.168.56.1:1200 | 19 ]
-19:30:46 - Sending message [ from: 19 | 192.168.56.1:1200 | 8 | 25:3 | PUT | to: 192.168.56.1:1300 | 39 ]
-19:30:49 - Got message [ from: 15 | 192.168.56.1:1500 | 4 | 25 | ASK_GET | to: 192.168.56.1:1200 | 19 ]
-19:30:51 - Sending message [ from: 15 | 192.168.56.1:1500 | 9 | 25 | ASK_GET | to: 192.168.56.1:1300 | 39 ]
-19:31:12 - Pausing for 5000 ms
-19:31:17 - Please wait...
-19:31:17 - Pausing for 5000 ms
-19:31:17 - Sending message [ from: 19 | 192.168.56.1:1200 | 12 | 2 | ASK_GET | to: 192.168.56.1:1300 | 39 ]
-19:31:22 - [ 39 | 192.168.56.1:1300 ] 
-19:31:22 - [ 59 | 192.168.56.1:1400 ] 
-19:31:22 - [ 63 | 192.168.56.1:1100 ] 
-19:31:22 - [ 15 | 192.168.56.1:1500 ] 
-19:31:22 - Stopping...
+12:28:57 - Starting servent [ 19 | 192.168.56.1:1200 ] 
+12:28:57 - Pausing for 40000 ms
+12:28:59 - Sending message [ from: 19 | 192.168.56.1:1200 | 0 | no_text | NEW_NODE | to: 192.168.56.1:1100 | 63 ]
+12:29:00 - Got message [ from: 63 | 192.168.56.1:1100 | 0 | no_text | WELCOME | to: 192.168.56.1:1200 | 19 ]
+12:29:01 - Sending message [ from: 19 | 192.168.56.1:1200 | 1 | no_text | UPDATE | to: 192.168.56.1:1100 | 63 ]
+12:29:02 - Got message [ from: 19 | 192.168.56.1:1200 | 1 | {192.168.56.1:1100} | UPDATE | to: 192.168.56.1:1200 | 19 ]
+12:29:02 - Sending message [ from: 19 | 192.168.56.1:1200 | 2 | no_text | NEW_NODE_RELEASE_LOCK_MESSAGE | to: 192.168.56.1:1100 | 63 ]
+12:29:03 - Got message [ from: 15 | 192.168.56.1:1500 | 2 | no_text | NEW_NODE | to: 192.168.56.1:1200 | 19 ]
+12:29:03 - New node handler before lock
+12:29:03 - Waiting for lock in while loop
+12:29:03 - New node handler after lock
+12:29:04 - Sending message [ from: 19 | 192.168.56.1:1200 | 3 | no_text | WELCOME | to: 192.168.56.1:1500 | 15 ]
+12:29:06 - Got message [ from: 15 | 192.168.56.1:1500 | 1 | no_text | UPDATE | to: 192.168.56.1:1200 | 19 ]
+12:29:07 - Sending message [ from: 15 | 192.168.56.1:1500 | 4 | {192.168.56.1:1200} | UPDATE | to: 192.168.56.1:1100 | 63 ]
+12:29:09 - Got message [ from: 15 | 192.168.56.1:1500 | 2 | no_text | NEW_NODE_RELEASE_LOCK_MESSAGE | to: 192.168.56.1:1200 | 19 ]
+12:29:11 - Got message [ from: 15 | 192.168.56.1:1500 | 3 | 25:3 | PUT | to: 192.168.56.1:1200 | 19 ]
+12:29:12 - Sending message [ from: 19 | 192.168.56.1:1200 | 6 | 25:3 | PUT | to: 192.168.56.1:1100 | 63 ]
+12:29:14 - Got message [ from: 15 | 192.168.56.1:1500 | 4 | 25:3 | PUT | to: 192.168.56.1:1200 | 19 ]
+12:29:14 - Got message [ from: 39 | 192.168.56.1:1300 | 5 | {192.168.56.1:1100},{192.168.56.1:1500} | UPDATE | to: 192.168.56.1:1200 | 19 ]
+12:29:15 - Sending message [ from: 19 | 192.168.56.1:1200 | 7 | 25:3 | PUT | to: 192.168.56.1:1100 | 63 ]
+12:29:15 - Got message [ from: 15 | 192.168.56.1:1500 | 6 | 25 | ASK_GET | to: 192.168.56.1:1200 | 19 ]
+12:29:16 - Sending message [ from: 39 | 192.168.56.1:1300 | 8 | {192.168.56.1:1100},{192.168.56.1:1500},{192.168.56.1:1200} | UPDATE | to: 192.168.56.1:1300 | 39 ]
+12:29:16 - Sending message [ from: 15 | 192.168.56.1:1500 | 9 | 25 | ASK_GET | to: 192.168.56.1:1300 | 39 ]
+12:29:16 - Got message [ from: 15 | 192.168.56.1:1500 | 7 | 25:3 | PUT | to: 192.168.56.1:1200 | 19 ]
+12:29:17 - Sending message [ from: 19 | 192.168.56.1:1200 | 10 | 25:3 | PUT | to: 192.168.56.1:1300 | 39 ]
+12:29:37 - Pausing for 5000 ms
+12:29:42 - Please wait...
+12:29:42 - Pausing for 5000 ms
+12:29:44 - Sending message [ from: 19 | 192.168.56.1:1200 | 12 | 2 | ASK_GET | to: 192.168.56.1:1300 | 39 ]
+12:29:47 - [ 39 | 192.168.56.1:1300 ] 
+12:29:47 - [ 63 | 192.168.56.1:1100 ] 
+12:29:47 - [ 15 | 192.168.56.1:1500 ] 
+12:29:47 - Stopping...

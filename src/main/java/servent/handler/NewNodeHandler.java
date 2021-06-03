@@ -6,6 +6,7 @@ import app.ServentInfo;
 import servent.message.*;
 import servent.message.util.MessageUtil;
 
+import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -38,9 +39,19 @@ public class NewNodeHandler implements MessageHandler {
 			//check if he is my predecessor
 			boolean isMyPred = AppConfig.chordState.isKeyMine(newNodeInfo.getChordId());
 
+
 			if (isMyPred) { //if yes, prepare and send welcome message
 				AppConfig.timestampedStandardPrint("New node handler before lock");
+
 				DistributedMutex.lock();
+				if(!AppConfig.chordState.isKeyMine(newNodeInfo.getChordId())) {
+					DistributedMutex.unlock();
+					ServentInfo nextNode = AppConfig.chordState.getNextNodeForKey(newNodeInfo.getChordId());
+					NewNodeMessage nnm = new NewNodeMessage(newNodeInfo, nextNode);
+					MessageUtil.sendMessage(nnm);
+					return;
+				}
+
 				AppConfig.timestampedStandardPrint("New node handler after lock");
 
 

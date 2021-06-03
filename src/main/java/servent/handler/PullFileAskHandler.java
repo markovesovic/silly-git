@@ -30,34 +30,34 @@ public class PullFileAskHandler implements MessageHandler {
                 return;
             }
 
-            String[] args = message.getMessageText().split(":");
-            String filePath = args[0];
-            int version = Integer.parseInt(args[1]);
-
-            int filePathHash = (filePath.hashCode() > 0 ? filePath.hashCode() : -filePath.hashCode()) % ChordState.CHORD_SIZE;
-
-            if( AppConfig.chordState.isKeyMine(filePathHash) ) {
-
-                PullFileResponse pullFileResponse = null;
-
-                if( AppConfig.chordState.getCurrentNewestVersion().get(filePath) != null ) {
-
-                    version = version == -1 ? AppConfig.chordState.getCurrentNewestVersion().get(filePath) : version;
-
-                    List<String> content = Files.readAllLines(Paths.get(AppConfig.WAREHOUSE_PATH + filePath + "_" + version));
-
-                    pullFileResponse = new PullFileResponse(filePath, content);
-                }
-
-                PullFileTellMessage pullFileTellMessage = new PullFileTellMessage(AppConfig.myServentInfo, message.getSenderServentInfo(), filePath, pullFileResponse);
-                MessageUtil.sendMessage(pullFileTellMessage);
-
-                return;
-            }
-
-            ServentInfo nextNode = AppConfig.chordState.getNextNodeForKey(filePathHash);
-            PullFileAskMessage pullFileAskMessage = new PullFileAskMessage(message.getSenderServentInfo(), nextNode, filePath, version);
-            MessageUtil.sendMessage(pullFileAskMessage);
+//            String[] args = message.getMessageText().split(":");
+//            String filePath = args[0];
+//            int version = Integer.parseInt(args[1]);
+//
+//            int filePathHash = (filePath.hashCode() > 0 ? filePath.hashCode() : -filePath.hashCode()) % ChordState.CHORD_SIZE;
+//
+//            if( AppConfig.chordState.isKeyMine(filePathHash) ) {
+//
+//                PullFileResponse pullFileResponse = null;
+//
+//                if( AppConfig.chordState.getCurrentNewestVersion().get(filePath) != null ) {
+//
+//                    version = version == -1 ? AppConfig.chordState.getCurrentNewestVersion().get(filePath) : version;
+//
+//                    List<String> content = Files.readAllLines(Paths.get(AppConfig.WAREHOUSE_PATH + filePath + "_" + version));
+//
+//                    pullFileResponse = new PullFileResponse(filePath, content);
+//                }
+//
+//                PullFileTellMessage pullFileTellMessage = new PullFileTellMessage(AppConfig.myServentInfo, message.getSenderServentInfo(), filePath, pullFileResponse);
+//                MessageUtil.sendMessage(pullFileTellMessage);
+//
+//                return;
+//            }
+//
+//            ServentInfo nextNode = AppConfig.chordState.getNextNodeForKey(filePathHash);
+//            PullFileAskMessage pullFileAskMessage = new PullFileAskMessage(message.getSenderServentInfo(), nextNode, filePath, version);
+//            MessageUtil.sendMessage(pullFileAskMessage);
 
         } catch (Exception e) {
             e.printStackTrace();
