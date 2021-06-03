@@ -11,6 +11,7 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ChordState {
 
@@ -22,16 +23,20 @@ public class ChordState {
 	
 	private int chordLevel; //log_2(CHORD_SIZE)
 	
-	private final ServentInfo[] successorTable;
+	private ServentInfo[] successorTable;
 	private ServentInfo predecessorInfo;
 	
 	//we DO NOT use this to send messages, but only to construct the successor table
-	private final List<ServentInfo> allNodeInfo;
+	private List<ServentInfo> allNodeInfo;
 	
 	private Map<Integer, Integer> valueMap;
 
 
 	public ChordState() {
+		initChordState();
+	}
+
+	public void initChordState() {
 		this.chordLevel = 1;
 		int tmp = CHORD_SIZE;
 		while (tmp != 2) {
@@ -41,17 +46,17 @@ public class ChordState {
 			tmp /= 2;
 			this.chordLevel++;
 		}
-		
+
 		successorTable = new ServentInfo[chordLevel];
 		for (int i = 0; i < chordLevel; i++) {
 			successorTable[i] = null;
 		}
-		
+
 		predecessorInfo = null;
 		valueMap = new HashMap<>();
 		allNodeInfo = new CopyOnWriteArrayList<>();
 	}
-	
+
 	/**
 	 * This should be called once after we get <code>WELCOME</code> message.
 	 * It sets up our initial value map and our first successor so we can send <code>UPDATE</code>.
@@ -250,44 +255,16 @@ public class ChordState {
 		allNodeInfo.addAll(newNodes);
 
 		updateNodes();
-//		allNodeInfo.sort(Comparator.comparingInt(ServentInfo::getChordId));
-//
-//		List<ServentInfo> newList = new ArrayList<>();
-//		List<ServentInfo> newList2 = new ArrayList<>();
-//
-//		int myId = AppConfig.myServentInfo.getChordId();
-//		for (ServentInfo serventInfo : allNodeInfo) {
-//			if (serventInfo.getChordId() < myId) {
-//				newList2.add(serventInfo);
-//			} else {
-//				newList.add(serventInfo);
-//			}
-//		}
-//
-//		allNodeInfo.clear();
-//		allNodeInfo.addAll(newList);
-//		allNodeInfo.addAll(newList2);
-//		if (newList2.size() > 0) {
-//			predecessorInfo = newList2.get(newList2.size()-1);
-//		} else {
-//			predecessorInfo = newList.get(newList.size()-1);
-//		}
-//
-//		updateSuccessorTable();
 	}
 
 	public void removeNodes(List<ServentInfo> oldNodes) {
 
 		AppConfig.timestampedStandardPrint("All nodes before removing: " + allNodeInfo);
-//		allNodeInfo.removeAll(oldNodes);
-		oldNodes.forEach(nodeToRemove -> {
-			allNodeInfo.forEach(node -> {
-				if(node.getListenerPort() == nodeToRemove.getListenerPort() &&
-							node.getIpAddress().equals(nodeToRemove.getIpAddress())) {
-					allNodeInfo.remove(node);
-				}
-			});
-		});
+		oldNodes.forEach(nodeToRemove ->
+				allNodeInfo.forEach(node -> {
+					if(node.getListenerPort() == nodeToRemove.getListenerPort() && node.getIpAddress().equals(nodeToRemove.getIpAddress()))
+							allNodeInfo.remove(node);
+		}));
 		AppConfig.timestampedStandardPrint("All nodes after removing: " + allNodeInfo);
 
 		updateNodes();
@@ -313,7 +290,12 @@ public class ChordState {
 		if(newList2.size() > 0) {
 			predecessorInfo = newList2.get(newList2.size() - 1);
 		} else {
-			predecessorInfo = newList.get(newList.size() - 1);
+			try {
+				predecessorInfo = newList.get(newList.size() - 1);
+			} catch (IndexOutOfBoundsException e) {
+				initChordState();
+				return;
+			}
 		}
 		updateSuccessorTable();
 	}
@@ -340,37 +322,41 @@ public class ChordState {
 		return -2;
 	}
 
+	private final Map<String, Integer> currentFileVersionsInWorkingDir = new ConcurrentHashMap<>();
 
 	private final Map<String, Map<Integer, List<String>>> warehouseFiles = new ConcurrentHashMap<>();
 	private final Map<String, List<String>> warehouseDirectoryFiles = new ConcurrentHashMap<>();
 	private final Map<String, List<String>> warehouseDirectoryDirectories = new ConcurrentHashMap<>();
 
 	// My implementation
-	public void addFile(String filePath, List<String> content) {
+	public void addFile(String filePath, List<String> content, int chordID) {
 		int filePathHash = (filePath.hashCode() > 0 ? filePath.hashCode() : -filePath.hashCode()) % CHORD_SIZE;
 
 		if( isKeyMine(filePathHash) ) {
 
 			AppConfig.timestampedStandardPrint("File content: " + content);
 
+			ServentInfo nextNode = getNextNodeForKey(chordID);
+			String notification;
+
 			if(warehouseFiles.containsKey(filePath)) {
-				AppConfig.timestampedStandardPrint("Fail");
-				// TODO: Send message that file is already added
-				return;
+				notification = "File is already being tracked in system! Try commit";
+			} else {
+				notification = "File has been successfully added to system!";
+
+				Map<Integer, List<String>> newMap = new ConcurrentHashMap<>();
+				newMap.put(0, content);
+				warehouseFiles.put(filePath, newMap);
 			}
 
-			Map<Integer, List<String>> newMap = new ConcurrentHashMap<>();
-			newMap.put(0, content);
-			warehouseFiles.put(filePath, newMap);
-
-			AppConfig.timestampedStandardPrint("Success");
-			// TODO: Send message that file is successfully added
+			AddFileResponseMessage addFileResponseMessage = new AddFileResponseMessage(AppConfig.myServentInfo, nextNode, notification, chordID);
+			MessageUtil.sendMessage(addFileResponseMessage);
 
 			return;
 		}
 
 		ServentInfo nextNode = getNextNodeForKey(filePathHash);
-		AddFileMessage addFileMessage = new AddFileMessage(AppConfig.myServentInfo, nextNode, filePath, content);
+		AddFileMessage addFileMessage = new AddFileMessage(AppConfig.myServentInfo, nextNode, filePath, content, chordID);
 		MessageUtil.sendMessage(addFileMessage);
 	}
 
@@ -390,7 +376,7 @@ public class ChordState {
 
 	}
 
-	public void commitFile(String filePath, List<String> content) {
+	public void commitFile(String filePath, List<String> content, int version) {
 		int filePathHash = (filePath.hashCode() > 0 ? filePath.hashCode() : -filePath.hashCode()) % CHORD_SIZE;
 
 		if( isKeyMine(filePathHash) ) {
@@ -404,13 +390,21 @@ public class ChordState {
 			}
 
 			Map<Integer, List<String>> allFileVersions = warehouseFiles.get(filePath);
+
 			int maxVersion = 0;
 			for(int key : allFileVersions.keySet()) {
 				if(key > maxVersion) {
 					maxVersion = key;
 				}
 			}
-			allFileVersions.put(maxVersion, content);
+
+			if(maxVersion > version) {
+				// TODO: Send message that conflict happened with latest version
+				allFileVersions.get(maxVersion);
+				return;
+			}
+
+			allFileVersions.put(maxVersion + 1, content);
 			AppConfig.timestampedStandardPrint("Success");
 			// TODO: Send message that commit was successful
 
@@ -418,33 +412,35 @@ public class ChordState {
 		}
 
 		ServentInfo nextNode = getNextNodeForKey(filePathHash);
-		CommitFileMessage commitFileMessage = new CommitFileMessage(AppConfig.myServentInfo, nextNode, filePath, content);
+		CommitFileMessage commitFileMessage = new CommitFileMessage(AppConfig.myServentInfo, nextNode, filePath, content, version);
 		MessageUtil.sendMessage(commitFileMessage);
 }
 
-	public void removeFile(String filePath) {
+	public void removeFile(String filePath, int chordID) {
 		int filePathHash = (filePath.hashCode() > 0 ? filePath.hashCode() : -filePath.hashCode()) % CHORD_SIZE;
 
 		if( isKeyMine(filePathHash) ) {
 
+			ServentInfo nextNode = getNextNodeForKey(chordID);
+			String notification;
 			if(!warehouseFiles.containsKey(filePath)) {
-				AppConfig.timestampedStandardPrint("Fail");
-				// TODO: Send message that file is not being tracked
-				return;
+				notification = "This file is not being tracked in system!";
+			} else {
+				warehouseFiles.remove(filePath);
+				notification = "File has been successfully removed from system";
 			}
-
-			warehouseFiles.remove(filePath);
-			AppConfig.timestampedStandardPrint("Success");
-			// TODO: Send message that file is successfully removed
-
+			RemoveFileResponseMessage removeFileResponseMessage = new RemoveFileResponseMessage(AppConfig.myServentInfo, nextNode, notification, chordID);
+			MessageUtil.sendMessage(removeFileResponseMessage);
 
 			return;
 		}
 		ServentInfo nextNode = getNextNodeForKey(filePathHash);
-		RemoveFileMessage removeFileMessage = new RemoveFileMessage(AppConfig.myServentInfo, nextNode, filePath);
+		RemoveFileMessage removeFileMessage = new RemoveFileMessage(AppConfig.myServentInfo, nextNode, filePath, chordID);
 		MessageUtil.sendMessage(removeFileMessage);
 	}
 
+
+	//TODO: Totally refactor pullFile function
 	public PullFileResponse pullFile(String filePath, int version) {
 		int filePathHash = (filePath.hashCode() > 0 ? filePath.hashCode() : -filePath.hashCode()) % CHORD_SIZE;
 
@@ -482,4 +478,11 @@ public class ChordState {
 		return new PullFileResponse("", null);
 	}
 
+	public Map<String, Integer> getCurrentFileVersionsInWorkingDir() {
+		return currentFileVersionsInWorkingDir;
+	}
+
+	public Map<String, Map<Integer, List<String>>> getWarehouseFiles() {
+		return warehouseFiles;
+	}
 }

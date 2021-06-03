@@ -14,16 +14,28 @@ public class BasicMessage implements Message {
 	private final ServentInfo senderServentInfo;
 	private final ServentInfo receiverServentInfo;
 	private final String messageText;
+	private final int chordID;
 	
 	//This gives us a unique id - incremented in every natural constructor.
 	private static final AtomicInteger messageCounter = new AtomicInteger(0);
 	private final int messageId;
-	
+
 	public BasicMessage(MessageType type, ServentInfo senderServentInfo, ServentInfo receiverServentInfo) {
 		this.type = type;
 		this.senderServentInfo = senderServentInfo;
 		this.receiverServentInfo = receiverServentInfo;
 		this.messageText = "";
+		this.chordID = 0;
+
+		this.messageId = messageCounter.getAndIncrement();
+	}
+	
+	public BasicMessage(MessageType type, ServentInfo senderServentInfo, ServentInfo receiverServentInfo, int chordID) {
+		this.type = type;
+		this.senderServentInfo = senderServentInfo;
+		this.receiverServentInfo = receiverServentInfo;
+		this.messageText = "";
+		this.chordID = chordID;
 		
 		this.messageId = messageCounter.getAndIncrement();
 	}
@@ -33,8 +45,23 @@ public class BasicMessage implements Message {
 		this.senderServentInfo = senderServentInfo;
 		this.receiverServentInfo = receiverServentInfo;
 		this.messageText = messageText;
-		
+		this.chordID = 0;
+
 		this.messageId = messageCounter.getAndIncrement();
+	}
+
+	public BasicMessage(MessageType type, ServentInfo senderServentInfo, ServentInfo receiverServentInfo, String messageText, int chordID) {
+		this.type = type;
+		this.senderServentInfo = senderServentInfo;
+		this.receiverServentInfo = receiverServentInfo;
+		this.messageText = messageText;
+		this.chordID = chordID;
+
+		this.messageId = messageCounter.getAndIncrement();
+	}
+	@Override
+	public int getChordID() {
+		return this.chordID;
 	}
 
 	@Override

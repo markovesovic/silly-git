@@ -23,7 +23,13 @@ public class TestCommand implements CLICommand {
 //            DistributedMutex.unlock();
 //            AppConfig.timestampedStandardPrint("Released lock");
 
+            DistributedMutex.lock();
             AppConfig.chordState.getAllNodeInfo().forEach(node -> AppConfig.timestampedStandardPrint(node.toString()));
+            AppConfig.timestampedStandardPrint("All files in warehouse on this node: ");
+            AppConfig.chordState.getWarehouseFiles().forEach((filename, versions) -> {
+                AppConfig.timestampedStandardPrint(filename + ": " + versions);
+            });
+            DistributedMutex.unlock();
 
         } catch (Exception e) {
             e.printStackTrace();

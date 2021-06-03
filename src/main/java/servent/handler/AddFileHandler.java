@@ -27,9 +27,10 @@ public class AddFileHandler implements MessageHandler {
                 AppConfig.timestampedStandardPrint("Add file handler got wrong message instance");
                 return;
             }
+
             List<String> content = ((AddFileMessage)message).getContent();
 
-            AppConfig.chordState.addFile(message.getMessageText(), content);
+            AppConfig.chordState.addFile(message.getMessageText(), content, message.getChordID());
 
         } catch (Exception e) {
             e.printStackTrace();

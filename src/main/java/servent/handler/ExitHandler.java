@@ -59,7 +59,9 @@ public class ExitHandler implements MessageHandler {
             DistributedMutex.unlock();
             listener.stop();
             // Sleep - wait for message to be sent
-            Thread.sleep(2000);
+            AppConfig.timestampedStandardPrint("Before sleep");
+            Thread.sleep(5000);
+            AppConfig.timestampedStandardPrint("Waking up after sleep");
 
         } catch (Exception e) {
             e.printStackTrace();

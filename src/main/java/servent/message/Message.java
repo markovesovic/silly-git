@@ -16,4 +16,5 @@ public interface Message extends Serializable {
 	
 	int getMessageId();
 
+	int getChordID();
 }

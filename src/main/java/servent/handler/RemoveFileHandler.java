@@ -19,7 +19,7 @@ public class RemoveFileHandler implements MessageHandler {
                 AppConfig.timestampedStandardPrint("Remove handler got wrong message type");
             }
 
-            AppConfig.chordState.removeFile(message.getMessageText());
+            AppConfig.chordState.removeFile(message.getMessageText(), message.getChordID());
 
         } catch (Exception e) {
             e.printStackTrace();

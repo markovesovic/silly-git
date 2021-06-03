@@ -57,10 +57,10 @@ public final class DistributedMutex {
     }
 
     public static void sendTokenForward() {
-        ServentInfo nextNode = AppConfig.chordState.getNextNodeServentInfo();
+        ServentInfo nextNode = AppConfig.chordState.getPredecessor();
         if(nextNode == null) {
             try {
-                Thread.sleep(250);
+                Thread.sleep(750);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
