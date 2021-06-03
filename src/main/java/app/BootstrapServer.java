@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class BootstrapServer {
 
@@ -26,13 +27,16 @@ public class BootstrapServer {
 				working = false;
 				break;
 			}
+			if(line.equals("list")) {
+				System.out.println("All active servents: " + this.activeServentsInfo);
+			}
 		}
 
 		sc.close();
 	}
 	
 	public BootstrapServer() {
-		activeServentsInfo = new ArrayList<>();
+		activeServentsInfo = new CopyOnWriteArrayList<>();
 	}
 	
 	public void doBootstrap(int bsPort) {
@@ -65,43 +69,61 @@ public class BootstrapServer {
 				String message = socketScanner.nextLine();
 
 				// MESSAGE EXAMPLE : "Hail\n1100\n127.0.0.1"
-				if (message.equals("Hail")) {
+				switch (message) {
+					case "Hail": {
 
-					int newServentPort = socketScanner.nextInt();
-					String newServentIPAddress = socketScanner.next();
-					
-					System.out.println("GOT -- port: " + newServentPort + ", ip: " + newServentIPAddress + "; from address: " + newNodeSocketAddress);
+						int newServentPort = socketScanner.nextInt();
+						String newServentIPAddress = socketScanner.next();
+
+						AppConfig.timestampedStandardPrint("Hail message from: " + newServentPort + ", ip: " + newServentIPAddress + "; from address: " + newNodeSocketAddress);
 
 
-					PrintWriter socketWriter = new PrintWriter(newServentSocket.getOutputStream());
-					
-					if (activeServentsInfo.size() == 0) {
+						PrintWriter socketWriter = new PrintWriter(newServentSocket.getOutputStream());
 
-						socketWriter.write(-1 + "\n");
+						if (activeServentsInfo.size() == 0) {
+
+							socketWriter.write(-1 + "\n");
+							activeServentsInfo.add(new BootstrapServentInfo(newServentIPAddress, newServentPort));
+
+						} else {
+
+							BootstrapServentInfo randServentInfo = activeServentsInfo.get(rand.nextInt(activeServentsInfo.size()));
+							socketWriter.write(
+										randServentInfo.getListenerPort() + "\n" +
+										   randServentInfo.getIpAddress() + "\n"
+							);
+
+						}
+
+						socketWriter.flush();
+						break;
+					}
+					// MESSAGE EXAMPLE: "New\n1100\n127.0.0.1"
+					case "New": {
+
+						int newServentPort = socketScanner.nextInt();
+						String newServentIPAddress = socketScanner.next();
+
+						AppConfig.timestampedStandardPrint("New message: port: " + newServentPort + ", host: " + newServentIPAddress);
+
 						activeServentsInfo.add(new BootstrapServentInfo(newServentIPAddress, newServentPort));
 
-					} else {
-
-						BootstrapServentInfo randServentInfo = activeServentsInfo.get(rand.nextInt(activeServentsInfo.size()));
-						socketWriter.write(
-								randServentInfo.getListenerPort() + "\n" +
-								randServentInfo.getIpAddress() + "\n"
-						);
-
+						break;
 					}
-					
-					socketWriter.flush();
+					case "Exit": {
 
-				// MESSAGE EXAMPLE: "New\n1100\n127.0.0.1"
-				} else if (message.equals("New")) {
+						int oldServentPort = socketScanner.nextInt();
+						String oldServentIPAddress = socketScanner.next();
 
-					int newServentPort = socketScanner.nextInt();
-					String newServentIPAddress = socketScanner.next();
-					
-					System.out.println("adding " + newServentPort + ", from: " + newServentIPAddress);
-					
-					activeServentsInfo.add(new BootstrapServentInfo(newServentIPAddress, newServentPort));
-
+						AppConfig.timestampedStandardPrint("Exit message: port: " + oldServentPort + ", host: " + oldServentIPAddress);
+						for (BootstrapServentInfo si : this.activeServentsInfo) {
+							if (si.getIpAddress().equals(oldServentIPAddress) && si.getListenerPort() == oldServentPort) {
+								this.activeServentsInfo.remove(si);
+								break;
+							}
+						}
+						break;
+					}
 				}
 
 				newServentSocket.close();

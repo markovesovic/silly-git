@@ -66,6 +66,7 @@ public final class DistributedMutex {
             }
             receiveToken();
         } else {
+            AppConfig.timestampedStandardPrint("Sending token to: " + nextNode);
             TokenMessage tokenMessage = new TokenMessage(AppConfig.myServentInfo, nextNode);
             MessageUtil.sendMessage(tokenMessage);
         }

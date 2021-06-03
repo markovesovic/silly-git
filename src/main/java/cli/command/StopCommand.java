@@ -7,6 +7,10 @@ import servent.SimpleServentListener;
 import servent.message.ExitMessage;
 import servent.message.util.MessageUtil;
 
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.net.Socket;
+
 public class StopCommand implements CLICommand {
 
 	private final CLIParser parser;
@@ -29,6 +33,21 @@ public class StopCommand implements CLICommand {
 
 		// Lock whole system while you are reconstructing it
 		DistributedMutex.lock();
+
+		try {
+			Socket bsSocket = new Socket(AppConfig.BOOTSTRAP_HOST, AppConfig.BOOTSTRAP_PORT);
+
+			PrintWriter bsWriter = new PrintWriter(bsSocket.getOutputStream());
+			bsWriter.write(
+					"Exit\n" +
+						AppConfig.myServentInfo.getListenerPort() + "\n" +
+						AppConfig.myServentInfo.getIpAddress() + "\n"
+			);
+			bsWriter.flush();
+			bsSocket.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
 		ExitMessage exitMessage = new ExitMessage(AppConfig.myServentInfo, AppConfig.chordState.getNextNodeServentInfo());
 		MessageUtil.sendMessage(exitMessage);

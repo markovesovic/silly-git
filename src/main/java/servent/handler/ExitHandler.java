@@ -58,6 +58,8 @@ public class ExitHandler implements MessageHandler {
             // Gracefully exit
             DistributedMutex.unlock();
             listener.stop();
+            // Sleep - wait for message to be sent
+            Thread.sleep(2000);
 
         } catch (Exception e) {
             e.printStackTrace();
