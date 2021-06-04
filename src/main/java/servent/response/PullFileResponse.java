@@ -7,10 +7,12 @@ public class PullFileResponse implements Serializable {
 
     private final String filePath;
     private final List<String> content;
+    private final int version;
 
-    public PullFileResponse(String filePath, List<String> content) {
+    public PullFileResponse(String filePath, List<String> content, int version) {
         this.filePath = filePath;
         this.content = content;
+        this.version = version;
     }
 
     public String getFilePath() {
@@ -19,5 +21,9 @@ public class PullFileResponse implements Serializable {
 
     public List<String> getContent() {
         return content;
+    }
+
+    public int getVersion() {
+        return version;
     }
 }

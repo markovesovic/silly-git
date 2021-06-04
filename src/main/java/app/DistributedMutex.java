@@ -10,6 +10,7 @@ public final class DistributedMutex {
     public static final AtomicBoolean gotToken = new AtomicBoolean(false);
     public static final AtomicBoolean wantLock = new AtomicBoolean(false);
     public static final AtomicBoolean localLock = new AtomicBoolean(false);
+    private static int print = 0;
 
     // TODO: Implement lock for local thread race
 
@@ -30,14 +31,15 @@ public final class DistributedMutex {
 
         wantLock.set(true);
 
+        AppConfig.timestampedStandardPrint("Waiting for distributed token");
         while(!gotToken.get()) {
             try {
-                AppConfig.timestampedStandardPrint("Waiting for lock in while loop");
                 Thread.sleep(250);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
+        AppConfig.timestampedStandardPrint("Got distributed token");
     }
 
     public static void unlock() {
@@ -59,7 +61,10 @@ public final class DistributedMutex {
     public static void sendTokenForward() {
         ServentInfo nextNode = AppConfig.chordState.getNextNodeServentInfo();
         if(nextNode == null) {
-            AppConfig.timestampedStandardPrint("Token on this node");
+            if(print++ > 5) {
+                AppConfig.timestampedStandardPrint("Token on this node");
+                print = 0;
+            }
             try {
                 Thread.sleep(750);
             } catch (InterruptedException e) {
@@ -67,7 +72,10 @@ public final class DistributedMutex {
             }
             receiveToken();
         } else {
-            AppConfig.timestampedStandardPrint("Sending token to: " + nextNode);
+            if(print++ > 5) {
+                AppConfig.timestampedStandardPrint("Sending token to: " + nextNode);
+                print = 0;
+            }
             TokenMessage tokenMessage = new TokenMessage(AppConfig.myServentInfo, nextNode);
             MessageUtil.sendMessage(tokenMessage);
         }

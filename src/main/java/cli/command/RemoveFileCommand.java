@@ -17,6 +17,7 @@ public class RemoveFileCommand implements CLICommand {
             AppConfig.chordState.removeFile(args, AppConfig.myServentInfo.getChordId());
         } catch (Exception e) {
             e.printStackTrace();
+            DistributedMutex.unlock();
         }
     }
 }

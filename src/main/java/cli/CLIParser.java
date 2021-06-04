@@ -47,6 +47,7 @@ public class CLIParser implements Runnable, Cancellable {
 		commandList.add(new CommitFileCommand());
 		commandList.add(new RemoveFileCommand());
 		commandList.add(new PullFileCommand());
+		commandList.add(new PushFileCommand());
 
 		commandList.add(new TestCommand());
 	}
@@ -64,7 +65,7 @@ public class CLIParser implements Runnable, Cancellable {
 			String commandArgs = null;
 			if (spacePos != -1) {
 				commandName = commandLine.substring(0, spacePos);
-				commandArgs = commandLine.substring(spacePos+1, commandLine.length());
+				commandArgs = commandLine.substring(spacePos+1);
 			} else {
 				commandName = commandLine;
 			}

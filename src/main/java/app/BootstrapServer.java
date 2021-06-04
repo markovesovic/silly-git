@@ -122,6 +122,9 @@ public class BootstrapServer {
 								break;
 							}
 						}
+						if(this.activeServentsInfo.size() == 0) {
+							AppConfig.timestampedErrorPrint("Last node exited system. System is not recoverable");
+						}
 						break;
 					}
 				}

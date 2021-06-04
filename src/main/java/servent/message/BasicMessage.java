@@ -124,7 +124,8 @@ public class BasicMessage implements Message {
 				" | " + (getMessageText().equals("") ? "no_text" : getMessageText()) +
 				" | " + getMessageType() +
 				" | to: " + getReceiverServentInfo().getIpAddress() + ":" + getReceiverServentInfo().getListenerPort() +
-				" | " + ChordState.chordHash(getReceiverServentInfo().getIpAddress(), getReceiverServentInfo().getListenerPort()) + " ]";
+				" | " + ChordState.chordHash(getReceiverServentInfo().getIpAddress(), getReceiverServentInfo().getListenerPort()) + " ]" +
+				" | " + "chordID: " + getChordID();
 	}
 
 }

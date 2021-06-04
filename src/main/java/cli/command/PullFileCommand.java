@@ -1,6 +1,7 @@
 package cli.command;
 
 import app.AppConfig;
+import app.DistributedMutex;
 import servent.response.PullFileResponse;
 
 public class PullFileCommand implements CLICommand {
@@ -12,6 +13,7 @@ public class PullFileCommand implements CLICommand {
 
     @Override
     public void execute(String args) {
+        DistributedMutex.lock();
         try {
             String[] splitArgs = args.split(" ");
 
@@ -23,20 +25,20 @@ public class PullFileCommand implements CLICommand {
                 version = Integer.parseInt(splitArgs[1]);
             }
 
-            PullFileResponse response = AppConfig.chordState.pullFile(filePath, version);
+            PullFileResponse response = AppConfig.chordState.pullFile(filePath, version, AppConfig.myServentInfo.getChordId());
 
-            if(response == null) {
-                AppConfig.timestampedStandardPrint("No such file tracked in system");
-
-            } else if(response.getFilePath().equals("")) {
+            if(response.getVersion() == -1) {
+                AppConfig.timestampedStandardPrint(response.getFilePath());
+            } else if(response.getVersion() == -2) {
                 AppConfig.timestampedStandardPrint("Please wait...");
-
             } else {
-                AppConfig.timestampedStandardPrint("Filepath: " + filePath + ", with content: " +
-                        response.getContent() + "; Successfully added to system");
-
+                AppConfig.timestampedStandardPrint("File successfully retrieved from remote!");
+                AppConfig.chordState.saveFileToFs(response.getFilePath(), response.getContent());
+                AppConfig.chordState.getCurrentFileVersionsInWorkingDir().put(filePath, response.getVersion());
             }
+
         } catch(Exception e) {
+            DistributedMutex.unlock();
             e.printStackTrace();
         }
     }

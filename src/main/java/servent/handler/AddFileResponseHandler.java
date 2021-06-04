@@ -42,7 +42,7 @@ public class AddFileResponseHandler implements MessageHandler {
             }
 
             // I got response for my add message
-            AppConfig.timestampedStandardPrint(this.message.getMessageText());
+            AppConfig.timestampedStandardPrint("Node responded: " + this.message.getMessageText());
             DistributedMutex.unlock();
 
         } catch (Exception e) {

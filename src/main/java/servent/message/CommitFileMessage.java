@@ -9,8 +9,8 @@ public class CommitFileMessage extends BasicMessage {
     private final List<String> content;
     private final int version;
 
-    public CommitFileMessage(ServentInfo senderServentInfo, ServentInfo receiverServentInfo, String filePath, List<String> content, int version) {
-        super(MessageType.COMMIT_FILE_MESSAGE, senderServentInfo, receiverServentInfo, filePath);
+    public CommitFileMessage(ServentInfo senderServentInfo, ServentInfo receiverServentInfo, String filePath, List<String> content, int version, int chordID) {
+        super(MessageType.COMMIT_FILE_MESSAGE, senderServentInfo, receiverServentInfo, filePath, chordID);
         this.content = content;
         this.version = version;
     }

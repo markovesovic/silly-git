@@ -107,6 +107,14 @@ public class SimpleServentListener implements Runnable, Cancellable {
 						messageHandler = new PullFileTellHandler(clientMessage);
 						break;
 					}
+					case PUSH_FILE_MESSAGE: {
+						messageHandler = new PushFileHandler(clientMessage);
+						break;
+					}
+					case PUSH_FILE_RESPONSE_MESSAGE: {
+						messageHandler = new PushFileResponseHandler(clientMessage);
+						break;
+					}
 
 					case ADD_FILE_RESPONSE_MESSAGE: {
 						messageHandler = new AddFileResponseHandler(clientMessage);

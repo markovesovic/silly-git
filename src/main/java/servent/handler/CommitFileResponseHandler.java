@@ -25,10 +25,12 @@ public class CommitFileResponseHandler implements MessageHandler {
                 AppConfig.timestampedStandardPrint("Commit file handler got wrong message type");
                 return;
             }
+
             if(!(this.message instanceof CommitFileResponseMessage)) {
                 AppConfig.timestampedStandardPrint("Commit file handler got wrong message instance");
                 return;
             }
+
             int chordID = this.message.getChordID();
             if( !AppConfig.chordState.isKeyMine( chordID ) ) {
                 ServentInfo nextNode = AppConfig.chordState.getNextNodeForKey(chordID);
@@ -36,7 +38,7 @@ public class CommitFileResponseHandler implements MessageHandler {
                         message.getSenderServentInfo(),
                         nextNode,
                         message.getMessageText(),
-                        message.getChordID(),
+                        chordID,
                         ((CommitFileResponseMessage) message).isConflict(),
                         ((CommitFileResponseMessage) message).getContent(),
                         ((CommitFileResponseMessage) message).getFilePath()
@@ -46,7 +48,6 @@ public class CommitFileResponseHandler implements MessageHandler {
             }
 
             // I got response for my own message - do conflict handling logic
-            DistributedMutex.unlock();
             AppConfig.timestampedStandardPrint("Node responded: " + this.message.getMessageText());
 
             if(!((CommitFileResponseMessage) message).isConflict()) {
@@ -54,7 +55,7 @@ public class CommitFileResponseHandler implements MessageHandler {
                 AppConfig.chordState.getCurrentFileVersionsInWorkingDir().put(((CommitFileResponseMessage) message).getFilePath(), lastVersion + 1);
                 return;
             }
-            FileWriter myWriter = new FileWriter(AppConfig.ROOT_PATH + ((CommitFileResponseMessage) message).getFilePath() + ".temp");
+            FileWriter myWriter = new FileWriter(AppConfig.ROOT_PATH + ((CommitFileResponseMessage) message).getFilePath() + "__temp");
 
             for (String s : ((CommitFileResponseMessage) message).getContent()) {
                 myWriter.write(s + System.lineSeparator());
@@ -65,9 +66,10 @@ public class CommitFileResponseHandler implements MessageHandler {
 
 
             AppConfig.timestampedStandardPrint("Conflict happened! Temp file is in the same dir as your local copy");
-            AppConfig.timestampedStandardPrint("- Use push to overwrite remote with your local copy (commit --force)");
+            AppConfig.timestampedStandardPrint("- Use push (commit --force) to overwrite remote with your local copy");
             AppConfig.timestampedStandardPrint("- Use pull to overwrite your local copy with remote version");
 
+            DistributedMutex.unlock();
 
         } catch (Exception e) {
             e.printStackTrace();

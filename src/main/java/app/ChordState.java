@@ -62,8 +62,11 @@ public class ChordState {
 	public void init(WelcomeMessage welcomeMsg, ServentInfo senderServentInfo) {
 		//set a temporary pointer to next node, for sending of update message
 		successorTable[0] = new ServentInfo(senderServentInfo.getIpAddress(), senderServentInfo.getListenerPort());
-		this.valueMap = welcomeMsg.getValues();
-		
+//		this.valueMap = welcomeMsg.getValues();
+		this.warehouseFiles = welcomeMsg.getValues();
+		AppConfig.timestampedStandardPrint("My new files");
+		AppConfig.timestampedStandardPrint(warehouseFiles.toString());
+
 		//tell bootstrap this node is not a collider
 		try {
 			Socket bsSocket = new Socket(AppConfig.BOOTSTRAP_HOST, AppConfig.BOOTSTRAP_PORT);
@@ -85,18 +88,10 @@ public class ChordState {
 		return this.allNodeInfo;
 	}
 	
-	public int getChordLevel() {
-		return chordLevel;
-	}
-	
 	public ServentInfo[] getSuccessorTable() {
 		return successorTable;
 	}
 	
-	public int getNextNodePort() {
-		return successorTable[0].getListenerPort();
-	}
-
 	public ServentInfo getNextNodeServentInfo() {
 		return successorTable[0];
 	}
@@ -115,6 +110,10 @@ public class ChordState {
 	
 	public void setValueMap(Map<Integer, Integer> valueMap) {
 		this.valueMap = valueMap;
+	}
+
+	public void setWarehouseFiles(Map<String, Map<Integer, List<String>>> warehouseFiles) {
+		this.warehouseFiles = warehouseFiles;
 	}
 	
 	public boolean isCollision(int chordId) {
@@ -319,9 +318,9 @@ public class ChordState {
 
 	private final Map<String, Integer> currentFileVersionsInWorkingDir = new ConcurrentHashMap<>();
 
-	private final Map<String, Map<Integer, List<String>>> warehouseFiles = new ConcurrentHashMap<>();
-	private final Map<String, List<String>> warehouseDirectoryFiles = new ConcurrentHashMap<>();
-	private final Map<String, List<String>> warehouseDirectoryDirectories = new ConcurrentHashMap<>();
+	private Map<String, Map<Integer, List<String>>> warehouseFiles = new ConcurrentHashMap<>();
+//	private final Map<String, List<String>> warehouseDirectoryFiles = new ConcurrentHashMap<>();
+//	private final Map<String, List<String>> warehouseDirectoryDirectories = new ConcurrentHashMap<>();
 
 	// My implementation
 	public void addFile(String filePath, List<String> content, int chordID) {
@@ -355,6 +354,7 @@ public class ChordState {
 		MessageUtil.sendMessage(addFileMessage);
 	}
 
+	/*
 	public void addDirectory(String dirPath, List<String> files, List<String> dirs) {
 		int dirPathHash = (dirPath.hashCode() > 0 ? dirPath.hashCode() : -dirPath.hashCode()) % CHORD_SIZE;
 
@@ -370,6 +370,7 @@ public class ChordState {
 		}
 
 	}
+	*/
 
 	public void commitFile(String filePath, List<String> content, int version, int chordID) {
 		int filePathHash = (filePath.hashCode() > 0 ? filePath.hashCode() : -filePath.hashCode()) % CHORD_SIZE;
@@ -397,7 +398,7 @@ public class ChordState {
 				}
 
 				if (maxVersion > version) {
-					notification = "Your local copy is behind remote by " + (maxVersion - version) + "commit(s)";
+					notification = "Your local copy is behind remote by " + (maxVersion - version) + " commit(s)";
 					conflict = true;
 					returnContent = allFileVersions.get(maxVersion);
 
@@ -418,7 +419,7 @@ public class ChordState {
 		}
 
 		ServentInfo nextNode = getNextNodeForKey(filePathHash);
-		CommitFileMessage commitFileMessage = new CommitFileMessage(AppConfig.myServentInfo, nextNode, filePath, content, version);
+		CommitFileMessage commitFileMessage = new CommitFileMessage(AppConfig.myServentInfo, nextNode, filePath, content, version, chordID);
 		MessageUtil.sendMessage(commitFileMessage);
 }
 
@@ -446,15 +447,13 @@ public class ChordState {
 	}
 
 
-	//TODO: Totally refactor pullFile function
-	public PullFileResponse pullFile(String filePath, int version) {
+	public PullFileResponse pullFile(String filePath, int version, int chordID) {
 		int filePathHash = (filePath.hashCode() > 0 ? filePath.hashCode() : -filePath.hashCode()) % CHORD_SIZE;
 
 		if( isKeyMine(filePathHash) ) {
 
 			if(!warehouseFiles.containsKey(filePath)) {
-				// TODO: Send message that file is not being tracked
-				return null;
+				return new PullFileResponse("File is not being tracked in system!", null, -1);
 			}
 
 			Map<Integer, List<String>> allFileVersions = warehouseFiles.get(filePath);
@@ -466,22 +465,72 @@ public class ChordState {
 					}
 				}
 			}
+
 			if(!allFileVersions.containsKey(version)) {
-				// TODO: Send message that given version does not exist
-				AppConfig.timestampedStandardPrint("Version does not exist");
-				return null;
+				return new PullFileResponse("Asked file version does not exist!", null, -1);
 			}
 
 			List<String> fileContent = allFileVersions.get(version);
-			return new PullFileResponse(filePath, fileContent);
-
+			return new PullFileResponse(filePath, fileContent, version);
 		}
 
 		ServentInfo nextNode = getNextNodeForKey(filePathHash);
-		PullFileAskMessage pullFileAskMessage = new PullFileAskMessage(AppConfig.myServentInfo, nextNode, filePath, version);
+		PullFileAskMessage pullFileAskMessage = new PullFileAskMessage(AppConfig.myServentInfo, nextNode, filePath, version, chordID);
 		MessageUtil.sendMessage(pullFileAskMessage);
 
-		return new PullFileResponse("", null);
+		return new PullFileResponse("", null, -2);
+	}
+
+	public void pushFile(String filePath, List<String> content, int chordID) {
+		int filePathHash = (filePath.hashCode() > 0 ? filePath.hashCode() : -filePath.hashCode()) % CHORD_SIZE;
+
+		if( isKeyMine(filePathHash) ) {
+
+			AppConfig.timestampedStandardPrint("File content: " + content);
+
+			ServentInfo nextNode = getNextNodeForKey(chordID);
+			String notification;
+
+			int maxVersion = -1;
+
+			if(!warehouseFiles.containsKey(filePath)) {
+				notification = "Given file is not being tracked!!";
+			} else {
+				Map<Integer, List<String>> allFileVersions = warehouseFiles.get(filePath);
+
+				for(int key : allFileVersions.keySet()) {
+					if(key > maxVersion) {
+						maxVersion = key;
+					}
+				}
+				allFileVersions.put(maxVersion + 1, content);
+				notification = "Successfully updated remote copy";
+			}
+			PushFileResponseMessage pushFileResponseMessage = new PushFileResponseMessage(
+					AppConfig.myServentInfo, nextNode, notification, chordID, filePath, maxVersion + 1
+			);
+			MessageUtil.sendMessage(pushFileResponseMessage);
+
+			return;
+		}
+		ServentInfo nextNode = getNextNodeForKey(filePathHash);
+		PushFileMessage pushFileMessage = new PushFileMessage(AppConfig.myServentInfo, nextNode, filePath, content, chordID);
+		MessageUtil.sendMessage(pushFileMessage);
+	}
+
+	public void saveFileToFs(String filePath, List<String> content) {
+		try {
+			FileWriter fileWriter = new FileWriter(AppConfig.ROOT_PATH + filePath);
+
+			for(String row : content) {
+				fileWriter.write(row + System.lineSeparator());
+			}
+
+			fileWriter.flush();
+			fileWriter.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public Map<String, Integer> getCurrentFileVersionsInWorkingDir() {
@@ -491,4 +540,5 @@ public class ChordState {
 	public Map<String, Map<Integer, List<String>>> getWarehouseFiles() {
 		return warehouseFiles;
 	}
+
 }

@@ -1,9 +1,12 @@
 package servent.handler;
 
 import app.AppConfig;
+import app.DistributedMutex;
+import app.ServentInfo;
 import servent.message.Message;
 import servent.message.MessageType;
 import servent.message.PullFileTellMessage;
+import servent.message.util.MessageUtil;
 import servent.response.PullFileResponse;
 
 import java.io.File;
@@ -30,29 +33,34 @@ public class PullFileTellHandler implements MessageHandler {
                 return;
             }
 
-            PullFileResponse response = ((PullFileTellMessage)message).getResponse();
-
-            if(response == null) {
-                AppConfig.timestampedStandardPrint("There is no such file in system: " + message.getMessageText());
+            int chordID = this.message.getChordID();
+            if( !AppConfig.chordState.isKeyMine( chordID ) ) {
+                ServentInfo nextNode = AppConfig.chordState.getNextNodeForKey(chordID);
+                PullFileTellMessage pullFileTellMessage = new PullFileTellMessage(
+                        message.getSenderServentInfo(),
+                        nextNode,
+                        "",
+                        chordID,
+                        ((PullFileTellMessage) this.message).getResponse()
+                );
+                MessageUtil.sendMessage(pullFileTellMessage);
                 return;
             }
 
-            File file = new File(AppConfig.ROOT_PATH + response.getFilePath());
 
-            file.delete();
-            file.createNewFile();
+            // I got response for my pull ask message
+            PullFileResponse response = ((PullFileTellMessage) message).getResponse();
 
-            FileWriter writer = new FileWriter(file);
-            for(String str : response.getContent()) {
-                writer.write(str + System.lineSeparator());
+            if(response.getVersion() == -1) {
+                AppConfig.timestampedStandardPrint("Node responded: " + response.getFilePath());
+                return;
             }
 
-            writer.flush();
-            writer.close();
+            AppConfig.timestampedStandardPrint("File successfully retrieved from remote!");
+            AppConfig.chordState.saveFileToFs(response.getFilePath(), response.getContent());
+            AppConfig.chordState.getCurrentFileVersionsInWorkingDir().put(response.getFilePath(), response.getVersion());
 
-            AppConfig.timestampedStandardPrint("File: " + response.getFilePath() + " successfully pulled");
-
-
+            DistributedMutex.unlock();
         } catch (Exception e) {
             e.printStackTrace();
         }

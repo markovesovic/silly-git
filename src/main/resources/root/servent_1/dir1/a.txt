@@ -1,7 +1,18 @@
 This is a test file!
+
+add test1.txt
+
+commit test1.txt
+
+pull test1.txt
+
+push test1.txt
+
+
 add dir1/a.txt
 add asdasd.txt
-add test1.txt
-commit test1.txt
+
+commit test1.txt --force
 commit asdasd.txt
+
 stop

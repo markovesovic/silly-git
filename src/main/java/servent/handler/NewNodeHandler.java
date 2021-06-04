@@ -1,6 +1,7 @@
 package servent.handler;
 
 import app.AppConfig;
+import app.ChordState;
 import app.DistributedMutex;
 import app.ServentInfo;
 import servent.message.*;
@@ -8,8 +9,10 @@ import servent.message.util.MessageUtil;
 
 import java.nio.file.Files;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class NewNodeHandler implements MessageHandler {
 
@@ -41,7 +44,7 @@ public class NewNodeHandler implements MessageHandler {
 
 
 			if (isMyPred) { //if yes, prepare and send welcome message
-				AppConfig.timestampedStandardPrint("New node handler before lock");
+//				AppConfig.timestampedStandardPrint("New node handler before lock");
 
 				DistributedMutex.lock();
 				if(!AppConfig.chordState.isKeyMine(newNodeInfo.getChordId())) {
@@ -52,7 +55,7 @@ public class NewNodeHandler implements MessageHandler {
 					return;
 				}
 
-				AppConfig.timestampedStandardPrint("New node handler after lock");
+//				AppConfig.timestampedStandardPrint("New node handler after lock");
 
 
 				ServentInfo hisPred = AppConfig.chordState.getPredecessor();
@@ -62,47 +65,90 @@ public class NewNodeHandler implements MessageHandler {
 
 				AppConfig.chordState.setPredecessor(newNodeInfo);
 
-				Map<Integer, Integer> myValues = AppConfig.chordState.getValueMap();
-				Map<Integer, Integer> hisValues = new HashMap<>();
+//				Map<Integer, Integer> myValues = AppConfig.chordState.getValueMap();
+//				Map<Integer, Integer> hisValues = new HashMap<>();
+
+//				for (Entry<Integer, Integer> valueEntry : myValues.entrySet()) {
+//					if (hisPredId == myId) { //i am first and he is second
+//						if (myId < newNodeId) {
+//							if (valueEntry.getKey() <= newNodeId && valueEntry.getKey() > myId) {
+//								hisValues.put(valueEntry.getKey(), valueEntry.getValue());
+//							}
+//						} else {
+//							if (valueEntry.getKey() <= newNodeId || valueEntry.getKey() > myId) {
+//								hisValues.put(valueEntry.getKey(), valueEntry.getValue());
+//							}
+//						}
+//					}
+//					if (hisPredId < myId) { //my old predecesor was before me
+//						if (valueEntry.getKey() <= newNodeId) {
+//							hisValues.put(valueEntry.getKey(), valueEntry.getValue());
+//						}
+//					} else { //my old predecesor was after me
+//						if (hisPredId > newNodeId) { //new node overflow
+//							if (valueEntry.getKey() <= newNodeId || valueEntry.getKey() > hisPredId) {
+//								hisValues.put(valueEntry.getKey(), valueEntry.getValue());
+//							}
+//						} else { //no new node overflow
+//							if (valueEntry.getKey() <= newNodeId && valueEntry.getKey() > hisPredId) {
+//								hisValues.put(valueEntry.getKey(), valueEntry.getValue());
+//							}
+//						}
+//
+//					}
+//				}
+
+				Map<String, Map<Integer, List<String>>> myValues = AppConfig.chordState.getWarehouseFiles();
+				Map<String, Map<Integer, List<String>>> hisValues = new ConcurrentHashMap<>();
 
 				int myId = AppConfig.myServentInfo.getChordId();
 				int hisPredId = hisPred.getChordId();
 				int newNodeId = newNodeInfo.getChordId();
 
-				for (Entry<Integer, Integer> valueEntry : myValues.entrySet()) {
-					if (hisPredId == myId) { //i am first and he is second
-						if (myId < newNodeId) {
-							if (valueEntry.getKey() <= newNodeId && valueEntry.getKey() > myId) {
+				for(Entry<String, Map<Integer, List<String>>> valueEntry : myValues.entrySet()) {
+
+					String filePath = valueEntry.getKey();
+					int filePathHash = (filePath.hashCode() > 0 ? filePath.hashCode() : -filePath.hashCode()) % ChordState.CHORD_SIZE;
+
+					if(hisPredId == myId) {
+						if(myId < newNodeId) {
+							if(filePathHash <= newNodeId && filePathHash > myId) {
 								hisValues.put(valueEntry.getKey(), valueEntry.getValue());
 							}
 						} else {
-							if (valueEntry.getKey() <= newNodeId || valueEntry.getKey() > myId) {
+							if(filePathHash <= newNodeId || filePathHash > myId) {
 								hisValues.put(valueEntry.getKey(), valueEntry.getValue());
 							}
 						}
 					}
-					if (hisPredId < myId) { //my old predecesor was before me
-						if (valueEntry.getKey() <= newNodeId) {
+					if(hisPredId < myId) {
+						if(filePathHash <= newNodeId) {
 							hisValues.put(valueEntry.getKey(), valueEntry.getValue());
 						}
-					} else { //my old predecesor was after me
-						if (hisPredId > newNodeId) { //new node overflow
-							if (valueEntry.getKey() <= newNodeId || valueEntry.getKey() > hisPredId) {
+					} else {
+						if(hisPredId > newNodeId) {
+							if(filePathHash <= newNodeId || filePathHash > hisPredId) {
 								hisValues.put(valueEntry.getKey(), valueEntry.getValue());
 							}
-						} else { //no new node overflow
-							if (valueEntry.getKey() <= newNodeId && valueEntry.getKey() > hisPredId) {
+						} else {
+							if(filePathHash <= newNodeId && filePathHash > hisPredId) {
 								hisValues.put(valueEntry.getKey(), valueEntry.getValue());
 							}
 						}
-
 					}
-
 				}
-				for (Integer key : hisValues.keySet()) { //remove his values from my map
+
+
+
+				for (String key : hisValues.keySet()) { //remove his values from my map
 					myValues.remove(key);
 				}
-				AppConfig.chordState.setValueMap(myValues);
+//				AppConfig.chordState.setValueMap(myValues);
+
+				AppConfig.chordState.setWarehouseFiles(myValues);
+
+
+
 
 				WelcomeMessage wm = new WelcomeMessage(AppConfig.myServentInfo, newNodeInfo, hisValues);
 				MessageUtil.sendMessage(wm);
