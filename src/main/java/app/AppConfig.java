@@ -4,16 +4,19 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.sql.Time;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Properties;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class AppConfig {
 
 	public static ServentInfo myServentInfo;
 
-	// public static boolean INITIALIZED = false;
+	public static boolean INITIALIZED = false;
 	public static String BOOTSTRAP_HOST;
 	public static int BOOTSTRAP_PORT;
 	public static int SERVENT_COUNT;
@@ -22,6 +25,11 @@ public class AppConfig {
 
 	public static String ROOT_PATH;
 	public static String WAREHOUSE_PATH;
+
+	public static int WEAK_FAILURE_LIMIT;
+	public static int STRONG_FAILURE_LIMIT;
+
+	public static final AtomicLong timeAtLastPong = new AtomicLong();
 
 	public static void readConfig(String configName, int serventID) {
 		configName += "servent_list.properties";
@@ -73,6 +81,16 @@ public class AppConfig {
 
 		} catch (NumberFormatException e) {
 			timestampedErrorPrint("Problem reading chord_size. Must be a number that is a power of 2. Exiting...");
+			System.exit(-1);
+		}
+
+
+
+		try {
+			WEAK_FAILURE_LIMIT = Integer.parseInt(properties.getProperty("weak_failure_limit"));
+			STRONG_FAILURE_LIMIT = Integer.parseInt(properties.getProperty("strong_failure_limit"));
+		} catch (Exception e) {
+			timestampedErrorPrint("Problem reading failure limits");
 			System.exit(-1);
 		}
 

@@ -19,4 +19,12 @@ public class BootstrapServentInfo implements Serializable {
     public int getListenerPort() {
         return listenerPort;
     }
+
+    @Override
+    public String toString() {
+        return "BootstrapServentInfo{" +
+                "ipAddress='" + ipAddress + '\'' +
+                ", listenerPort=" + listenerPort +
+                '}';
+    }
 }

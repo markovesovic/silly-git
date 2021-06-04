@@ -1,10 +1,15 @@
-12:28:54 - Bootstrap server started on port: 2001
-GOT -- port: 1100, ip: 192.168.56.1; from address: 127.0.0.1
-GOT -- port: 1200, ip: 192.168.56.1; from address: 127.0.0.1
-GOT -- port: 1300, ip: 192.168.56.1; from address: 127.0.0.1
-GOT -- port: 1400, ip: 192.168.56.1; from address: 127.0.0.1
-adding 1200, from: 192.168.56.1
-GOT -- port: 1500, ip: 192.168.56.1; from address: 127.0.0.1
-adding 1500, from: 192.168.56.1
-adding 1300, from: 192.168.56.1
-adding 1400, from: 192.168.56.1
+18:19:12 - Bootstrap server started on port: 2001
+18:19:14 - Hail message from: 1100, ip: 192.168.56.1; from address: 127.0.0.1
+18:19:15 - Hail message from: 1200, ip: 192.168.56.1; from address: 127.0.0.1
+18:19:16 - Hail message from: 1300, ip: 192.168.56.1; from address: 127.0.0.1
+18:19:17 - Hail message from: 1400, ip: 192.168.56.1; from address: 127.0.0.1
+18:19:17 - New message: port: 1200, host: 192.168.56.1
+18:19:18 - Hail message from: 1500, ip: 192.168.56.1; from address: 127.0.0.1
+18:19:23 - New message: port: 1500, host: 192.168.56.1
+18:19:29 - New message: port: 1300, host: 192.168.56.1
+18:19:40 - New message: port: 1400, host: 192.168.56.1
+18:19:52 - Exit message: port: 1500, host: 192.168.56.1
+18:20:13 - Exit message: port: 1200, host: 192.168.56.1
+18:20:21 - Exit message: port: 1300, host: 192.168.56.1
+18:20:25 - Exit message: port: 1400, host: 192.168.56.1
+18:20:28 - Exit message: port: 1100, host: 192.168.56.1

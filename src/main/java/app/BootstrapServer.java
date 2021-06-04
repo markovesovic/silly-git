@@ -28,7 +28,7 @@ public class BootstrapServer {
 				break;
 			}
 			if(line.equals("list")) {
-				System.out.println("All active servents: " + this.activeServentsInfo);
+				System.out.println("All active servents: " + this.activeServentsInfo.toString());
 			}
 		}
 

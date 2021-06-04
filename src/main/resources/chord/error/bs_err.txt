@@ -1,4 +1,5 @@
 Exception in thread "Thread-0" java.util.NoSuchElementException: No line found
 	at java.base/java.util.Scanner.nextLine(Scanner.java:1651)
-	at app.BootstrapServer.run(BootstrapServer.java:23)
+	at app.BootstrapServer.run(BootstrapServer.java:24)
 	at java.base/java.lang.Thread.run(Thread.java:835)
+18:20:28 - Last node exited system. System is not recoverable

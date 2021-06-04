@@ -4,7 +4,6 @@ import app.AppConfig;
 import app.Cancellable;
 import servent.handler.*;
 import servent.message.Message;
-import servent.message.NewNodeReleaseLockMessage;
 import servent.message.util.MessageUtil;
 
 import java.io.IOException;
@@ -55,6 +54,23 @@ public class SimpleServentListener implements Runnable, Cancellable {
 					case TELL_GET:
 						messageHandler = new TellGetHandler(clientMessage);
 						break;
+
+					case PING_MESSAGE: {
+						messageHandler = new PingHandler(clientMessage);
+						break;
+					}
+					case PONG_MESSAGE: {
+						messageHandler = new PongHandler(clientMessage);
+						break;
+					}
+					case HELPER_PING_MESSAGE: {
+						messageHandler = new HelperPingHandler(clientMessage);
+						break;
+					}
+					case REMOVE_NODE_MESSAGE: {
+						messageHandler = new RemoveNodeHandler(clientMessage);
+						break;
+					}
 
 
 					case NEW_NODE: {
@@ -126,6 +142,11 @@ public class SimpleServentListener implements Runnable, Cancellable {
 					}
 					case COMMIT_FILE_RESPONSE_MESSAGE: {
 						messageHandler = new CommitFileResponseHandler(clientMessage);
+						break;
+					}
+
+					case TRANSFER_FILES_MESSAGE: {
+						messageHandler = new TransferFilesHandler(clientMessage);
 						break;
 					}
 				}

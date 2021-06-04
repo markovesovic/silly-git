@@ -1,7 +1,39 @@
-12:28:59 - Starting servent [ 59 | 192.168.56.1:1400 ] 
-12:28:59 - Pausing for 20000 ms
-12:29:00 - Sending message [ from: 59 | 192.168.56.1:1400 | 0 | no_text | NEW_NODE | to: 192.168.56.1:1100 | 63 ]
-12:29:19 - Pausing for 10000 ms
-12:29:22 - Got message [ from: 63 | 192.168.56.1:1100 | 10 | no_text | WELCOME | to: 192.168.56.1:1400 | 59 ]
-12:29:23 - Sending message [ from: 59 | 192.168.56.1:1400 | 1 | no_text | UPDATE | to: 192.168.56.1:1100 | 63 ]
-12:29:29 - Stopping...
+18:19:17 - Starting servent [ 59 | 192.168.56.1:1400 ] 
+18:19:18 - Sending message [ from: 59 | 192.168.56.1:1400 | 0 | no_text | NEW_NODE | to: 192.168.56.1:1100 | 63 ] | chordID: 0
+18:19:40 - Got message [ from: 63 | 192.168.56.1:1100 | 7 | no_text | WELCOME | to: 192.168.56.1:1400 | 59 ] | chordID: 0
+18:19:40 - My new files
+18:19:40 - {}
+18:19:41 - Sending message [ from: 59 | 192.168.56.1:1400 | 1 | no_text | UPDATE | to: 192.168.56.1:1100 | 63 ] | chordID: 0
+18:19:45 - Got message [ from: 59 | 192.168.56.1:1400 | 5 | {192.168.56.1:1100},{192.168.56.1:1500},{192.168.56.1:1200},{192.168.56.1:1300} | UPDATE | to: 192.168.56.1:1400 | 59 ] | chordID: 0
+18:19:45 - Pausing for 20000 ms
+18:19:46 - Sending message [ from: 59 | 192.168.56.1:1400 | 2 | no_text | NEW_NODE_RELEASE_LOCK_MESSAGE | to: 192.168.56.1:1100 | 63 ] | chordID: 0
+18:19:55 - Got message [ from: 15 | 192.168.56.1:1500 | 7 | no_text | EXIT_MESSAGE | to: 192.168.56.1:1400 | 59 ] | chordID: 0
+18:19:55 - All nodes before removing: [[ 63 | 192.168.56.1:1100 ] , [ 15 | 192.168.56.1:1500 ] , [ 19 | 192.168.56.1:1200 ] , [ 39 | 192.168.56.1:1300 ] ]
+18:19:55 - All nodes after removing: [[ 63 | 192.168.56.1:1100 ] , [ 19 | 192.168.56.1:1200 ] , [ 39 | 192.168.56.1:1300 ] ]
+18:19:56 - Sending message [ from: 15 | 192.168.56.1:1500 | 4 | no_text | EXIT_MESSAGE | to: 192.168.56.1:1100 | 63 ] | chordID: 0
+18:20:05 - Pausing for 10000 ms
+18:20:15 - Got message [ from: 19 | 192.168.56.1:1200 | 12 | no_text | EXIT_MESSAGE | to: 192.168.56.1:1400 | 59 ] | chordID: 0
+18:20:15 - All nodes before removing: [[ 63 | 192.168.56.1:1100 ] , [ 19 | 192.168.56.1:1200 ] , [ 39 | 192.168.56.1:1300 ] ]
+18:20:15 - All nodes after removing: [[ 63 | 192.168.56.1:1100 ] , [ 39 | 192.168.56.1:1300 ] ]
+18:20:16 - Waiting for distributed token
+18:20:16 - Sending message [ from: 19 | 192.168.56.1:1200 | 9 | no_text | EXIT_MESSAGE | to: 192.168.56.1:1100 | 63 ] | chordID: 0
+18:20:19 - Got distributed token
+18:20:19 - [ 63 | 192.168.56.1:1100 ] 
+18:20:19 - [ 39 | 192.168.56.1:1300 ] 
+18:20:19 - All files in warehouse on this node: 
+18:20:19 - Stopping...
+18:20:19 - Waiting for distributed token
+18:20:22 - Got message [ from: 39 | 192.168.56.1:1300 | 15 | no_text | EXIT_MESSAGE | to: 192.168.56.1:1400 | 59 ] | chordID: 0
+18:20:22 - All nodes before removing: [[ 63 | 192.168.56.1:1100 ] , [ 39 | 192.168.56.1:1300 ] ]
+18:20:22 - All nodes after removing: [[ 63 | 192.168.56.1:1100 ] ]
+18:20:22 - Got message [ from: 39 | 192.168.56.1:1300 | 14 | no_text | TRANSFER_FILES_MESSAGE | to: 192.168.56.1:1400 | 59 ] | chordID: 0
+18:20:22 - Got new files: {}
+18:20:23 - Sending message [ from: 39 | 192.168.56.1:1300 | 11 | no_text | EXIT_MESSAGE | to: 192.168.56.1:1100 | 63 ] | chordID: 0
+18:20:25 - Got distributed token
+18:20:25 - My next node: [ 63 | 192.168.56.1:1100 ] , all nodes list size: 1
+18:20:26 - Sending message [ from: 59 | 192.168.56.1:1400 | 13 | no_text | EXIT_MESSAGE | to: 192.168.56.1:1100 | 63 ] | chordID: 0
+18:20:26 - Sending message [ from: 59 | 192.168.56.1:1400 | 12 | no_text | TRANSFER_FILES_MESSAGE | to: 192.168.56.1:1100 | 63 ] | chordID: 0
+18:20:26 - Got message [ from: 59 | 192.168.56.1:1400 | 20 | no_text | EXIT_MESSAGE | to: 192.168.56.1:1400 | 59 ] | chordID: 0
+18:20:26 - Sending token to: [ 63 | 192.168.56.1:1100 ] 
+18:20:26 - Waiting to be sure that token is sent
+18:20:31 - Exiting

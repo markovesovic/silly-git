@@ -30,7 +30,8 @@ public class MessageUtil {
 		}
 
 		assert clientMessage != null;
-		if (MESSAGE_UTIL_PRINTING && clientMessage.getMessageType() != MessageType.TOKEN_MESSAGE) {
+		if (MESSAGE_UTIL_PRINTING && clientMessage.getMessageType() != MessageType.TOKEN_MESSAGE
+				&& clientMessage.getMessageType() != MessageType.PING_MESSAGE && clientMessage.getMessageType() != MessageType.PONG_MESSAGE) {
 			AppConfig.timestampedStandardPrint("Got message " + clientMessage);
 		}
 				

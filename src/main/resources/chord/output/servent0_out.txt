@@ -1,87 +1,56 @@
-12:28:56 - Starting servent [ 63 | 192.168.56.1:1100 ] 
-12:28:56 - Pausing for 50000 ms
-12:28:56 - First node in Chord system.
-12:28:59 - Got message [ from: 19 | 192.168.56.1:1200 | 0 | no_text | NEW_NODE | to: 192.168.56.1:1100 | 63 ]
-12:28:59 - New node handler before lock
-12:28:59 - Waiting for lock in while loop
-12:28:59 - New node handler after lock
-12:29:00 - Got message [ from: 39 | 192.168.56.1:1300 | 0 | no_text | NEW_NODE | to: 192.168.56.1:1100 | 63 ]
-12:29:00 - New node handler before lock
-12:29:00 - Sending message [ from: 63 | 192.168.56.1:1100 | 0 | no_text | WELCOME | to: 192.168.56.1:1200 | 19 ]
-12:29:00 - Got message [ from: 59 | 192.168.56.1:1400 | 0 | no_text | NEW_NODE | to: 192.168.56.1:1100 | 63 ]
-12:29:00 - New node handler before lock
-12:29:01 - Got message [ from: 19 | 192.168.56.1:1200 | 1 | no_text | UPDATE | to: 192.168.56.1:1100 | 63 ]
-12:29:02 - Got message [ from: 15 | 192.168.56.1:1500 | 0 | no_text | NEW_NODE | to: 192.168.56.1:1100 | 63 ]
-12:29:02 - Sending message [ from: 19 | 192.168.56.1:1200 | 1 | {192.168.56.1:1100} | UPDATE | to: 192.168.56.1:1200 | 19 ]
-12:29:02 - Got message [ from: 19 | 192.168.56.1:1200 | 2 | no_text | NEW_NODE_RELEASE_LOCK_MESSAGE | to: 192.168.56.1:1100 | 63 ]
-12:29:03 - Sending message [ from: 15 | 192.168.56.1:1500 | 2 | no_text | NEW_NODE | to: 192.168.56.1:1200 | 19 ]
-12:29:03 - Waiting for lock in while loop
-12:29:03 - Waiting for lock in while loop
-12:29:03 - Waiting for lock in while loop
-12:29:04 - Waiting for lock in while loop
-12:29:04 - Waiting for lock in while loop
-12:29:04 - Waiting for lock in while loop
-12:29:04 - Waiting for lock in while loop
-12:29:05 - Waiting for lock in while loop
-12:29:05 - Waiting for lock in while loop
-12:29:05 - Waiting for lock in while loop
-12:29:05 - Waiting for lock in while loop
-12:29:06 - Waiting for lock in while loop
-12:29:06 - Waiting for lock in while loop
-12:29:06 - Waiting for lock in while loop
-12:29:06 - Waiting for lock in while loop
-12:29:07 - Waiting for lock in while loop
-12:29:07 - Got message [ from: 15 | 192.168.56.1:1500 | 4 | {192.168.56.1:1200} | UPDATE | to: 192.168.56.1:1100 | 63 ]
-12:29:07 - Waiting for lock in while loop
-12:29:07 - Waiting for lock in while loop
-12:29:07 - Waiting for lock in while loop
-12:29:08 - Waiting for lock in while loop
-12:29:08 - Waiting for lock in while loop
-12:29:08 - Waiting for lock in while loop
-12:29:08 - Sending message [ from: 15 | 192.168.56.1:1500 | 4 | {192.168.56.1:1200},{192.168.56.1:1100} | UPDATE | to: 192.168.56.1:1500 | 15 ]
-12:29:08 - Waiting for lock in while loop
-12:29:09 - Waiting for lock in while loop
-12:29:09 - Waiting for lock in while loop
-12:29:09 - Waiting for lock in while loop
-12:29:09 - Waiting for lock in while loop
-12:29:10 - Waiting for lock in while loop
-12:29:10 - Waiting for lock in while loop
-12:29:10 - Waiting for lock in while loop
-12:29:10 - New node handler after lock
-12:29:11 - Sending message [ from: 63 | 192.168.56.1:1100 | 5 | no_text | WELCOME | to: 192.168.56.1:1300 | 39 ]
-12:29:12 - Got message [ from: 19 | 192.168.56.1:1200 | 6 | 25:3 | PUT | to: 192.168.56.1:1100 | 63 ]
-12:29:13 - Sending message [ from: 63 | 192.168.56.1:1100 | 6 | 25:3 | PUT | to: 192.168.56.1:1500 | 15 ]
-12:29:13 - Got message [ from: 39 | 192.168.56.1:1300 | 1 | no_text | UPDATE | to: 192.168.56.1:1100 | 63 ]
-12:29:14 - Sending message [ from: 39 | 192.168.56.1:1300 | 7 | {192.168.56.1:1100} | UPDATE | to: 192.168.56.1:1500 | 15 ]
-12:29:15 - Got message [ from: 19 | 192.168.56.1:1200 | 7 | 25:3 | PUT | to: 192.168.56.1:1100 | 63 ]
-12:29:15 - Sending message [ from: 63 | 192.168.56.1:1100 | 8 | 25:3 | PUT | to: 192.168.56.1:1500 | 15 ]
-12:29:16 - Got message [ from: 39 | 192.168.56.1:1300 | 2 | no_text | NEW_NODE_RELEASE_LOCK_MESSAGE | to: 192.168.56.1:1100 | 63 ]
-12:29:17 - Waiting for lock in while loop
-12:29:17 - Waiting for lock in while loop
-12:29:17 - Waiting for lock in while loop
-12:29:18 - Waiting for lock in while loop
-12:29:18 - Waiting for lock in while loop
-12:29:18 - Waiting for lock in while loop
-12:29:18 - Waiting for lock in while loop
-12:29:19 - Waiting for lock in while loop
-12:29:19 - Waiting for lock in while loop
-12:29:19 - Waiting for lock in while loop
-12:29:19 - Waiting for lock in while loop
-12:29:20 - Waiting for lock in while loop
-12:29:20 - Waiting for lock in while loop
-12:29:20 - Waiting for lock in while loop
-12:29:20 - Waiting for lock in while loop
-12:29:21 - Waiting for lock in while loop
-12:29:21 - Waiting for lock in while loop
-12:29:21 - Waiting for lock in while loop
-12:29:21 - New node handler after lock
-12:29:22 - Sending message [ from: 63 | 192.168.56.1:1100 | 10 | no_text | WELCOME | to: 192.168.56.1:1400 | 59 ]
-12:29:23 - Got message [ from: 59 | 192.168.56.1:1400 | 1 | no_text | UPDATE | to: 192.168.56.1:1100 | 63 ]
-12:29:24 - Sending message [ from: 59 | 192.168.56.1:1400 | 11 | {192.168.56.1:1100} | UPDATE | to: 192.168.56.1:1500 | 15 ]
-12:29:46 - Pausing for 10000 ms
-12:29:47 - Sending message [ from: 63 | 192.168.56.1:1100 | 12 | 2:5 | PUT | to: 192.168.56.1:1500 | 15 ]
-12:29:56 - [ 15 | 192.168.56.1:1500 ] 
-12:29:56 - [ 19 | 192.168.56.1:1200 ] 
-12:29:56 - [ 39 | 192.168.56.1:1300 ] 
-12:29:56 - [ 59 | 192.168.56.1:1400 ] 
-12:29:56 - Stopping...
+18:19:14 - Starting servent [ 63 | 192.168.56.1:1100 ] 
+18:19:14 - First node in Chord system.
+18:19:14 - Pausing for 50000 ms
+18:19:16 - Got message [ from: 19 | 192.168.56.1:1200 | 0 | no_text | NEW_NODE | to: 192.168.56.1:1100 | 63 ] | chordID: 0
+18:19:16 - Waiting for distributed token
+18:19:16 - Got distributed token
+18:19:17 - Got message [ from: 39 | 192.168.56.1:1300 | 0 | no_text | NEW_NODE | to: 192.168.56.1:1100 | 63 ] | chordID: 0
+18:19:17 - Sending message [ from: 63 | 192.168.56.1:1100 | 0 | no_text | WELCOME | to: 192.168.56.1:1200 | 19 ] | chordID: 0
+18:19:18 - Got message [ from: 59 | 192.168.56.1:1400 | 0 | no_text | NEW_NODE | to: 192.168.56.1:1100 | 63 ] | chordID: 0
+18:19:18 - Got message [ from: 19 | 192.168.56.1:1200 | 1 | no_text | UPDATE | to: 192.168.56.1:1100 | 63 ] | chordID: 0
+18:19:19 - Sending message [ from: 19 | 192.168.56.1:1200 | 1 | {192.168.56.1:1100} | UPDATE | to: 192.168.56.1:1200 | 19 ] | chordID: 0
+18:19:20 - Got message [ from: 19 | 192.168.56.1:1200 | 2 | no_text | NEW_NODE_RELEASE_LOCK_MESSAGE | to: 192.168.56.1:1100 | 63 ] | chordID: 0
+18:19:20 - Waiting for distributed token
+18:19:24 - Got message [ from: 15 | 192.168.56.1:1500 | 4 | {192.168.56.1:1200} | UPDATE | to: 192.168.56.1:1100 | 63 ] | chordID: 0
+18:19:25 - Sending message [ from: 15 | 192.168.56.1:1500 | 3 | {192.168.56.1:1200},{192.168.56.1:1100} | UPDATE | to: 192.168.56.1:1500 | 15 ] | chordID: 0
+18:19:27 - Got distributed token
+18:19:28 - Sending message [ from: 63 | 192.168.56.1:1100 | 4 | no_text | WELCOME | to: 192.168.56.1:1300 | 39 ] | chordID: 0
+18:19:29 - Got message [ from: 39 | 192.168.56.1:1300 | 1 | no_text | UPDATE | to: 192.168.56.1:1100 | 63 ] | chordID: 0
+18:19:30 - Sending message [ from: 39 | 192.168.56.1:1300 | 5 | {192.168.56.1:1100} | UPDATE | to: 192.168.56.1:1500 | 15 ] | chordID: 0
+18:19:34 - Got message [ from: 39 | 192.168.56.1:1300 | 2 | no_text | NEW_NODE_RELEASE_LOCK_MESSAGE | to: 192.168.56.1:1100 | 63 ] | chordID: 0
+18:19:35 - Waiting for distributed token
+18:19:39 - Got distributed token
+18:19:40 - Sending message [ from: 63 | 192.168.56.1:1100 | 7 | no_text | WELCOME | to: 192.168.56.1:1400 | 59 ] | chordID: 0
+18:19:41 - Got message [ from: 59 | 192.168.56.1:1400 | 1 | no_text | UPDATE | to: 192.168.56.1:1100 | 63 ] | chordID: 0
+18:19:42 - Sending message [ from: 59 | 192.168.56.1:1400 | 8 | {192.168.56.1:1100} | UPDATE | to: 192.168.56.1:1500 | 15 ] | chordID: 0
+18:19:46 - Got message [ from: 59 | 192.168.56.1:1400 | 2 | no_text | NEW_NODE_RELEASE_LOCK_MESSAGE | to: 192.168.56.1:1100 | 63 ] | chordID: 0
+18:19:51 - Sending token to: [ 15 | 192.168.56.1:1500 ] 
+18:19:56 - Got message [ from: 15 | 192.168.56.1:1500 | 4 | no_text | EXIT_MESSAGE | to: 192.168.56.1:1100 | 63 ] | chordID: 0
+18:19:56 - All nodes before removing: [[ 15 | 192.168.56.1:1500 ] , [ 19 | 192.168.56.1:1200 ] , [ 39 | 192.168.56.1:1300 ] , [ 59 | 192.168.56.1:1400 ] ]
+18:19:56 - All nodes after removing: [[ 19 | 192.168.56.1:1200 ] , [ 39 | 192.168.56.1:1300 ] , [ 59 | 192.168.56.1:1400 ] ]
+18:19:57 - Sending message [ from: 15 | 192.168.56.1:1500 | 11 | no_text | EXIT_MESSAGE | to: 192.168.56.1:1500 | 15 ] | chordID: 0
+18:20:04 - Pausing for 10000 ms
+18:20:05 - Sending message [ from: 63 | 192.168.56.1:1100 | 14 | 2:5 | PUT | to: 192.168.56.1:1200 | 19 ] | chordID: 0
+18:20:15 - Waiting for distributed token
+18:20:16 - Got message [ from: 19 | 192.168.56.1:1200 | 9 | no_text | EXIT_MESSAGE | to: 192.168.56.1:1100 | 63 ] | chordID: 0
+18:20:16 - All nodes before removing: [[ 19 | 192.168.56.1:1200 ] , [ 39 | 192.168.56.1:1300 ] , [ 59 | 192.168.56.1:1400 ] ]
+18:20:16 - All nodes after removing: [[ 39 | 192.168.56.1:1300 ] , [ 59 | 192.168.56.1:1400 ] ]
+18:20:17 - Sending message [ from: 19 | 192.168.56.1:1200 | 17 | no_text | EXIT_MESSAGE | to: 192.168.56.1:1200 | 19 ] | chordID: 0
+18:20:20 - Got distributed token
+18:20:20 - [ 39 | 192.168.56.1:1300 ] 
+18:20:20 - [ 59 | 192.168.56.1:1400 ] 
+18:20:20 - All files in warehouse on this node: 
+18:20:20 - Stopping...
+18:20:21 - Waiting for distributed token
+18:20:23 - Got message [ from: 39 | 192.168.56.1:1300 | 11 | no_text | EXIT_MESSAGE | to: 192.168.56.1:1100 | 63 ] | chordID: 0
+18:20:23 - All nodes before removing: [[ 39 | 192.168.56.1:1300 ] , [ 59 | 192.168.56.1:1400 ] ]
+18:20:23 - All nodes after removing: [[ 59 | 192.168.56.1:1400 ] ]
+18:20:24 - Sending message [ from: 39 | 192.168.56.1:1300 | 19 | no_text | EXIT_MESSAGE | to: 192.168.56.1:1300 | 39 ] | chordID: 0
+18:20:26 - Got message [ from: 59 | 192.168.56.1:1400 | 13 | no_text | EXIT_MESSAGE | to: 192.168.56.1:1100 | 63 ] | chordID: 0
+18:20:26 - All nodes before removing: [[ 59 | 192.168.56.1:1400 ] ]
+18:20:26 - All nodes after removing: []
+18:20:26 - Got message [ from: 59 | 192.168.56.1:1400 | 12 | no_text | TRANSFER_FILES_MESSAGE | to: 192.168.56.1:1100 | 63 ] | chordID: 0
+18:20:26 - Got new files: {}
+18:20:26 - Sending message [ from: 59 | 192.168.56.1:1400 | 20 | no_text | EXIT_MESSAGE | to: 192.168.56.1:1400 | 59 ] | chordID: 0
+18:20:28 - Got distributed token
+18:20:28 - My next node: null, all nodes list size: 0

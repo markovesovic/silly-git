@@ -39,7 +39,7 @@ public class ServentInitializer implements Runnable {
 
 			bsSocket.close();
 		} catch (IOException e) {
-			e.printStackTrace();
+			AppConfig.timestampedStandardPrint("Socket error in contacting bs");
 		}
 
 		return nodeServentInfo;
@@ -57,6 +57,8 @@ public class ServentInitializer implements Runnable {
 
 		if (someServentInfo.getListenerPort() == -1) { //bootstrap gave us -1 -> we are first
 			AppConfig.timestampedStandardPrint("First node in Chord system.");
+			AppConfig.INITIALIZED = true;
+			AppConfig.timeAtLastPong.set(System.currentTimeMillis());
 			DistributedMutex.receiveToken();
 			return;
 		}

@@ -70,6 +70,9 @@ public class UpdateHandler implements MessageHandler {
 
 			NewNodeReleaseLockMessage newNodeReleaseLockMessage = new NewNodeReleaseLockMessage(AppConfig.myServentInfo, AppConfig.chordState.getNextNodeServentInfo());
 			MessageUtil.sendMessage(newNodeReleaseLockMessage);
+			AppConfig.INITIALIZED = true;
+			AppConfig.timeAtLastPong.set(System.currentTimeMillis());
+			AppConfig.timestampedStandardPrint("Node Initialized");
 
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -25,7 +25,8 @@ public class DelayedMessageSender implements Runnable {
 			e1.printStackTrace();
 		}
 		
-		if (MessageUtil.MESSAGE_UTIL_PRINTING && messageToSend.getMessageType() != MessageType.TOKEN_MESSAGE) {
+		if (MessageUtil.MESSAGE_UTIL_PRINTING && messageToSend.getMessageType() != MessageType.TOKEN_MESSAGE
+				&& messageToSend.getMessageType() != MessageType.PING_MESSAGE && messageToSend.getMessageType() != MessageType.PONG_MESSAGE) {
 			AppConfig.timestampedStandardPrint("Sending message " + messageToSend);
 		}
 		

@@ -51,8 +51,11 @@ public class ServentMain {
 		SimpleServentListener simpleListener = new SimpleServentListener();
 		Thread listenerThread = new Thread(simpleListener);
 		listenerThread.start();
-		
-		CLIParser cliParser = new CLIParser(simpleListener);
+
+		SuccessorPinger pinger = new SuccessorPinger();
+		new Thread(pinger).start();
+
+		CLIParser cliParser = new CLIParser(simpleListener, pinger);
 		Thread cliThread = new Thread(cliParser);
 		cliThread.start();
 		
