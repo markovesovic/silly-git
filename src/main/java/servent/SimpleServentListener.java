@@ -46,18 +46,6 @@ public class SimpleServentListener implements Runnable, Cancellable {
 				MessageHandler messageHandler = new NullHandler(clientMessage);
 
 				switch (clientMessage.getMessageType()) {
-					case NEW_NODE:
-						messageHandler = new NewNodeHandler(clientMessage);
-						break;
-					case WELCOME:
-						messageHandler = new WelcomeHandler(clientMessage);
-						break;
-					case SORRY:
-						messageHandler = new SorryHandler(clientMessage);
-						break;
-					case UPDATE:
-						messageHandler = new UpdateHandler(clientMessage);
-						break;
 					case PUT:
 						messageHandler = new PutHandler(clientMessage);
 						break;
@@ -67,34 +55,37 @@ public class SimpleServentListener implements Runnable, Cancellable {
 					case TELL_GET:
 						messageHandler = new TellGetHandler(clientMessage);
 						break;
-					case POISON:
-						break;
 
 
-					case TOKEN_MESSAGE: {
-						messageHandler = new TokenHandler(clientMessage);
+					case NEW_NODE: {
+						messageHandler = new NewNodeHandler(clientMessage);
 						break;
 					}
-
 					case NEW_NODE_RELEASE_LOCK_MESSAGE: {
 						messageHandler = new NewNodeReleaseLockHandler(clientMessage);
 						break;
 					}
-
-					case ADD_FILE_RESPONSE_MESSAGE: {
-						messageHandler = new AddFileResponseHandler(clientMessage);
+					case WELCOME: {
+						messageHandler = new WelcomeHandler(clientMessage);
 						break;
 					}
-					case REMOVE_FILE_RESPONSE_MESSAGE: {
-						messageHandler = new RemoveFileResponseHandler(clientMessage);
+					case SORRY: {
+						messageHandler = new SorryHandler(clientMessage);
 						break;
 					}
-
+					case UPDATE: {
+						messageHandler = new UpdateHandler(clientMessage);
+						break;
+					}
 					case EXIT_MESSAGE: {
 						messageHandler = new ExitHandler(clientMessage, this);
 						break;
 					}
 
+					case TOKEN_MESSAGE: {
+						messageHandler = new TokenHandler(clientMessage);
+						break;
+					}
 
 					case ADD_FILE_MESSAGE: {
 						messageHandler = new AddFileHandler(clientMessage);
@@ -114,6 +105,19 @@ public class SimpleServentListener implements Runnable, Cancellable {
 					}
 					case PULL_FILE_TELL_MESSAGE: {
 						messageHandler = new PullFileTellHandler(clientMessage);
+						break;
+					}
+
+					case ADD_FILE_RESPONSE_MESSAGE: {
+						messageHandler = new AddFileResponseHandler(clientMessage);
+						break;
+					}
+					case REMOVE_FILE_RESPONSE_MESSAGE: {
+						messageHandler = new RemoveFileResponseHandler(clientMessage);
+						break;
+					}
+					case COMMIT_FILE_RESPONSE_MESSAGE: {
+						messageHandler = new CommitFileResponseHandler(clientMessage);
 						break;
 					}
 				}

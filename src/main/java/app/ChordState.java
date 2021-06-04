@@ -6,12 +6,9 @@ import servent.response.PullFileResponse;
 
 import java.io.*;
 import java.net.Socket;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ChordState {
 
@@ -289,13 +286,11 @@ public class ChordState {
 		allNodeInfo.addAll(newList2);
 		if(newList2.size() > 0) {
 			predecessorInfo = newList2.get(newList2.size() - 1);
+		} else if (newList.size() > 0) {
+			predecessorInfo = newList.get(newList.size() - 1);
 		} else {
-			try {
-				predecessorInfo = newList.get(newList.size() - 1);
-			} catch (IndexOutOfBoundsException e) {
-				initChordState();
-				return;
-			}
+			initChordState();
+			return;
 		}
 		updateSuccessorTable();
 	}
@@ -376,37 +371,48 @@ public class ChordState {
 
 	}
 
-	public void commitFile(String filePath, List<String> content, int version) {
+	public void commitFile(String filePath, List<String> content, int version, int chordID) {
 		int filePathHash = (filePath.hashCode() > 0 ? filePath.hashCode() : -filePath.hashCode()) % CHORD_SIZE;
 
 		if( isKeyMine(filePathHash) ) {
 
 			AppConfig.timestampedStandardPrint("File content: " + content);
 
+			ServentInfo nextNode = getNextNodeForKey(chordID);
+			String notification;
+			boolean conflict = false;
+			List<String> returnContent = null;
+
 			if(!warehouseFiles.containsKey(filePath)) {
-				AppConfig.timestampedStandardPrint("Fail");
-				//TODO: Send message that file is not being tracked
-				return;
-			}
+				notification = "Given file is not yet being tracked! Use add first";
+			} else {
 
-			Map<Integer, List<String>> allFileVersions = warehouseFiles.get(filePath);
+				Map<Integer, List<String>> allFileVersions = warehouseFiles.get(filePath);
 
-			int maxVersion = 0;
-			for(int key : allFileVersions.keySet()) {
-				if(key > maxVersion) {
-					maxVersion = key;
+				int maxVersion = 0;
+				for (int key : allFileVersions.keySet()) {
+					if (key > maxVersion) {
+						maxVersion = key;
+					}
+				}
+
+				if (maxVersion > version) {
+					notification = "Your local copy is behind remote by " + (maxVersion - version) + "commit(s)";
+					conflict = true;
+					returnContent = allFileVersions.get(maxVersion);
+
+				} else if (content.equals(allFileVersions.get(maxVersion))) {
+					notification = "Commit failed because file did not change since latest commit";
+				} else {
+					notification = "File successfully committed, latest version: " + (maxVersion + 1);
+					allFileVersions.put(maxVersion + 1, content);
 				}
 			}
 
-			if(maxVersion > version) {
-				// TODO: Send message that conflict happened with latest version
-				allFileVersions.get(maxVersion);
-				return;
-			}
-
-			allFileVersions.put(maxVersion + 1, content);
-			AppConfig.timestampedStandardPrint("Success");
-			// TODO: Send message that commit was successful
+			CommitFileResponseMessage commitFileResponseMessage = new CommitFileResponseMessage(
+					AppConfig.myServentInfo, nextNode, notification, chordID, conflict, returnContent, filePath
+			);
+			MessageUtil.sendMessage(commitFileResponseMessage);
 
 			return;
 		}

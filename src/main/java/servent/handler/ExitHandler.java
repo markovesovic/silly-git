@@ -57,11 +57,11 @@ public class ExitHandler implements MessageHandler {
 
             // Gracefully exit
             DistributedMutex.unlock();
-            listener.stop();
             // Sleep - wait for message to be sent
-            AppConfig.timestampedStandardPrint("Before sleep");
+            AppConfig.timestampedStandardPrint("Waiting to be sure that token is sent");
             Thread.sleep(5000);
-            AppConfig.timestampedStandardPrint("Waking up after sleep");
+            AppConfig.timestampedStandardPrint("Exiting");
+            listener.stop();
 
         } catch (Exception e) {
             e.printStackTrace();

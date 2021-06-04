@@ -30,7 +30,7 @@ public class CommitFileHandler implements MessageHandler {
             List<String> content = ((CommitFileMessage)message).getContent();
             int version = ((CommitFileMessage)message).getVersion();
 
-            AppConfig.chordState.commitFile(message.getMessageText(), content, version);
+            AppConfig.chordState.commitFile(message.getMessageText(), content, version, message.getChordID());
 
         } catch (Exception e) {
             e.printStackTrace();
