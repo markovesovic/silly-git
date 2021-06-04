@@ -48,6 +48,10 @@ public class StopCommand implements CLICommand {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		if(AppConfig.chordState.getNextNodeServentInfo() == null) {
+			AppConfig.timestampedErrorPrint("Last node in system is exiting. System shutting down...");
+			System.exit(0);
+		}
 
 		ExitMessage exitMessage = new ExitMessage(AppConfig.myServentInfo, AppConfig.chordState.getNextNodeServentInfo());
 		MessageUtil.sendMessage(exitMessage);

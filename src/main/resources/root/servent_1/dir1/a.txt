@@ -4,3 +4,4 @@ add asdasd.txt
 add test1.txt
 commit test1.txt
 commit asdasd.txt
+stop

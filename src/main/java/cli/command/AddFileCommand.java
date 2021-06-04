@@ -18,6 +18,7 @@ public class AddFileCommand implements CLICommand {
     public void execute(String args) {
         DistributedMutex.lock();
         try {
+            Thread.sleep(10000);
 
             List<String> lines = Files.readAllLines(Paths.get(AppConfig.ROOT_PATH + args));
 
@@ -27,6 +28,8 @@ public class AddFileCommand implements CLICommand {
         } catch (IOException e) {
             AppConfig.timestampedStandardPrint("Failed add command");
             DistributedMutex.unlock();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 }
