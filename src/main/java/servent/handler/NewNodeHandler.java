@@ -65,39 +65,6 @@ public class NewNodeHandler implements MessageHandler {
 
 				AppConfig.chordState.setPredecessor(newNodeInfo);
 
-//				Map<Integer, Integer> myValues = AppConfig.chordState.getValueMap();
-//				Map<Integer, Integer> hisValues = new HashMap<>();
-
-//				for (Entry<Integer, Integer> valueEntry : myValues.entrySet()) {
-//					if (hisPredId == myId) { //i am first and he is second
-//						if (myId < newNodeId) {
-//							if (valueEntry.getKey() <= newNodeId && valueEntry.getKey() > myId) {
-//								hisValues.put(valueEntry.getKey(), valueEntry.getValue());
-//							}
-//						} else {
-//							if (valueEntry.getKey() <= newNodeId || valueEntry.getKey() > myId) {
-//								hisValues.put(valueEntry.getKey(), valueEntry.getValue());
-//							}
-//						}
-//					}
-//					if (hisPredId < myId) { //my old predecesor was before me
-//						if (valueEntry.getKey() <= newNodeId) {
-//							hisValues.put(valueEntry.getKey(), valueEntry.getValue());
-//						}
-//					} else { //my old predecesor was after me
-//						if (hisPredId > newNodeId) { //new node overflow
-//							if (valueEntry.getKey() <= newNodeId || valueEntry.getKey() > hisPredId) {
-//								hisValues.put(valueEntry.getKey(), valueEntry.getValue());
-//							}
-//						} else { //no new node overflow
-//							if (valueEntry.getKey() <= newNodeId && valueEntry.getKey() > hisPredId) {
-//								hisValues.put(valueEntry.getKey(), valueEntry.getValue());
-//							}
-//						}
-//
-//					}
-//				}
-
 				Map<String, Map<Integer, List<String>>> myValues = AppConfig.chordState.getWarehouseFiles();
 				Map<String, Map<Integer, List<String>>> hisValues = new ConcurrentHashMap<>();
 

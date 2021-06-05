@@ -27,10 +27,13 @@ public class SuccessorPinger implements Runnable, Cancellable {
 
         while(working) {
 
-            if(AppConfig.chordState.getNextNodeServentInfo() != null) {
-                PingMessage pingMessage = new PingMessage(AppConfig.myServentInfo, AppConfig.chordState.getNextNodeServentInfo());
-                MessageUtil.sendMessage(pingMessage);
+            if(AppConfig.chordState.getNextNodeServentInfo() == null) {
+                continue;
             }
+
+            PingMessage pingMessage = new PingMessage(AppConfig.myServentInfo, AppConfig.chordState.getNextNodeServentInfo());
+            MessageUtil.sendMessage(pingMessage);
+
             long timeSinceLastPong = System.currentTimeMillis() - AppConfig.timeAtLastPong.get();
 
             if(timeSinceLastPong > AppConfig.WEAK_FAILURE_LIMIT) {
@@ -41,7 +44,7 @@ public class SuccessorPinger implements Runnable, Cancellable {
                 MessageUtil.sendMessage(helperPingMessage);
             }
 
-            AppConfig.timestampedStandardPrint("Time since last pong response: " + timeSinceLastPong);
+//            AppConfig.timestampedStandardPrint("Time since last pong response: " + timeSinceLastPong);
 
             if(timeSinceLastPong > AppConfig.STRONG_FAILURE_LIMIT) {
 

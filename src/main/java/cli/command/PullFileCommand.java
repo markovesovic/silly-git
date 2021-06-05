@@ -29,12 +29,14 @@ public class PullFileCommand implements CLICommand {
 
             if(response.getVersion() == -1) {
                 AppConfig.timestampedStandardPrint(response.getFilePath());
+                DistributedMutex.unlock();
             } else if(response.getVersion() == -2) {
                 AppConfig.timestampedStandardPrint("Please wait...");
             } else {
                 AppConfig.timestampedStandardPrint("File successfully retrieved from remote!");
                 AppConfig.chordState.saveFileToFs(response.getFilePath(), response.getContent());
                 AppConfig.chordState.getCurrentFileVersionsInWorkingDir().put(filePath, response.getVersion());
+                DistributedMutex.unlock();
             }
 
         } catch(Exception e) {

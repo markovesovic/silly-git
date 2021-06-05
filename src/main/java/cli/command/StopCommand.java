@@ -32,45 +32,49 @@ public class StopCommand implements CLICommand {
 
 	@Override
 	public void execute(String args) {
-		AppConfig.timestampedStandardPrint("Stopping...");
-		parser.stop();
-		pinger.stop();
-
-		// Lock whole system while you are reconstructing it
-		DistributedMutex.lock();
-
 		try {
-			Socket bsSocket = new Socket(AppConfig.BOOTSTRAP_HOST, AppConfig.BOOTSTRAP_PORT);
+			AppConfig.timestampedStandardPrint("Stopping...");
+			parser.stop();
+			pinger.stop();
 
-			PrintWriter bsWriter = new PrintWriter(bsSocket.getOutputStream());
-			bsWriter.write(
-					"Exit\n" +
-						AppConfig.myServentInfo.getListenerPort() + "\n" +
-						AppConfig.myServentInfo.getIpAddress() + "\n"
+			// Lock whole system while you are reconstructing it
+			DistributedMutex.lock();
+
+			try {
+				Socket bsSocket = new Socket(AppConfig.BOOTSTRAP_HOST, AppConfig.BOOTSTRAP_PORT);
+
+				PrintWriter bsWriter = new PrintWriter(bsSocket.getOutputStream());
+				bsWriter.write(
+						"Exit\n" +
+								AppConfig.myServentInfo.getListenerPort() + "\n" +
+								AppConfig.myServentInfo.getIpAddress() + "\n"
+				);
+				bsWriter.flush();
+				bsSocket.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			AppConfig.timestampedStandardPrint("My next node: " + AppConfig.chordState.getNextNodeServentInfo() + ", all nodes list size: " + AppConfig.chordState.getAllNodeInfo().size());
+			if (AppConfig.chordState.getAllNodeInfo().size() == 0) {
+				AppConfig.timestampedErrorPrint("Last node in system is exiting. System shutting down...");
+				System.exit(0);
+			}
+
+			TransferFilesMessage transferFilesMessage = new TransferFilesMessage(
+					AppConfig.myServentInfo,
+					AppConfig.chordState.getNextNodeServentInfo(),
+					AppConfig.chordState.getWarehouseFiles()
 			);
-			bsWriter.flush();
-			bsSocket.close();
-		} catch (IOException e) {
+			MessageUtil.sendMessage(transferFilesMessage);
+
+			ExitMessage exitMessage = new ExitMessage(AppConfig.myServentInfo, AppConfig.chordState.getNextNodeServentInfo());
+			MessageUtil.sendMessage(exitMessage);
+
+			// Stop listener only when all nodes are informed of change
+//		listener.stop();
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		AppConfig.timestampedStandardPrint("My next node: " + AppConfig.chordState.getNextNodeServentInfo() + ", all nodes list size: " + AppConfig.chordState.getAllNodeInfo().size());
-		if(AppConfig.chordState.getAllNodeInfo().size() == 0) {
-			AppConfig.timestampedErrorPrint("Last node in system is exiting. System shutting down...");
-			System.exit(0);
-		}
-
-		TransferFilesMessage transferFilesMessage = new TransferFilesMessage(
-				AppConfig.myServentInfo,
-				AppConfig.chordState.getNextNodeServentInfo(),
-				AppConfig.chordState.getWarehouseFiles()
-		);
-		MessageUtil.sendMessage(transferFilesMessage);
-
-		ExitMessage exitMessage = new ExitMessage(AppConfig.myServentInfo, AppConfig.chordState.getNextNodeServentInfo());
-		MessageUtil.sendMessage(exitMessage);
-
-		// Stop listener only when all nodes are informed of change
-//		listener.stop();
 	}
 
 }

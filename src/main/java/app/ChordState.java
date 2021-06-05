@@ -520,6 +520,9 @@ public class ChordState {
 
 	public void saveFileToFs(String filePath, List<String> content) {
 		try {
+			File file = new File(AppConfig.ROOT_PATH + filePath);
+			file.getParentFile().mkdirs();
+
 			FileWriter fileWriter = new FileWriter(AppConfig.ROOT_PATH + filePath);
 
 			for(String row : content) {

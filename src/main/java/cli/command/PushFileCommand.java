@@ -3,6 +3,7 @@ package cli.command;
 import app.AppConfig;
 import app.DistributedMutex;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -20,6 +21,9 @@ public class PushFileCommand implements CLICommand {
         DistributedMutex.lock();
         try {
             List<String> lines = Files.readAllLines(Paths.get(AppConfig.ROOT_PATH + args));
+
+            File tempFile = new File(AppConfig.ROOT_PATH + args + ".temp");
+            tempFile.delete();
 
             AppConfig.chordState.pushFile(args, lines, AppConfig.myServentInfo.getChordId());
 

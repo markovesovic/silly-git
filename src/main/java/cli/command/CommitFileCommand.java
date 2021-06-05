@@ -3,6 +3,7 @@ package cli.command;
 import app.AppConfig;
 import app.DistributedMutex;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -37,6 +38,10 @@ public class CommitFileCommand implements CLICommand {
                 }
                 if(argParam.equals("--force")) {
                     List<String> lines = Files.readAllLines(Paths.get(AppConfig.ROOT_PATH + filePath));
+
+                    File tempFile = new File(AppConfig.ROOT_PATH + args + ".temp");
+                    tempFile.delete();
+
                     AppConfig.chordState.pushFile(filePath, lines, AppConfig.myServentInfo.getChordId());
                 } else {
                     DistributedMutex.unlock();

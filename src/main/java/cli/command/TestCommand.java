@@ -13,8 +13,10 @@ public class TestCommand implements CLICommand {
     @Override
     public void execute(String args) {
         try {
+            AppConfig.timestampedStandardPrint("TEST COMMAND");
 
             DistributedMutex.lock();
+            AppConfig.timestampedStandardPrint("All nodes in system: ");
             AppConfig.chordState.getAllNodeInfo().forEach(node -> AppConfig.timestampedStandardPrint(node.toString()));
             AppConfig.timestampedStandardPrint("All files in warehouse on this node: ");
             AppConfig.chordState.getWarehouseFiles().forEach((filename, versions) -> {

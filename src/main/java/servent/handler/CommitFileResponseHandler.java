@@ -53,9 +53,10 @@ public class CommitFileResponseHandler implements MessageHandler {
             if(!((CommitFileResponseMessage) message).isConflict()) {
                 int lastVersion = AppConfig.chordState.getCurrentFileVersionsInWorkingDir().get(((CommitFileResponseMessage) message).getFilePath());
                 AppConfig.chordState.getCurrentFileVersionsInWorkingDir().put(((CommitFileResponseMessage) message).getFilePath(), lastVersion + 1);
+                DistributedMutex.unlock();
                 return;
             }
-            FileWriter myWriter = new FileWriter(AppConfig.ROOT_PATH + ((CommitFileResponseMessage) message).getFilePath() + "__temp");
+            FileWriter myWriter = new FileWriter(AppConfig.ROOT_PATH + ((CommitFileResponseMessage) message).getFilePath() + ".temp");
 
             for (String s : ((CommitFileResponseMessage) message).getContent()) {
                 myWriter.write(s + System.lineSeparator());
