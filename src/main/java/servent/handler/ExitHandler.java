@@ -61,7 +61,9 @@ public class ExitHandler implements MessageHandler {
             AppConfig.timestampedStandardPrint("Waiting to be sure that token is sent");
             Thread.sleep(5000);
             AppConfig.timestampedStandardPrint("Exiting");
+
             listener.stop();
+            System.exit(0);
 
         } catch (Exception e) {
             e.printStackTrace();

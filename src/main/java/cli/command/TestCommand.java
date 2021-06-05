@@ -22,6 +22,8 @@ public class TestCommand implements CLICommand {
             AppConfig.chordState.getWarehouseFiles().forEach((filename, versions) -> {
                 AppConfig.timestampedStandardPrint(filename + ": " + versions);
             });
+            AppConfig.timestampedStandardPrint("All dirs in warehouse on this node: ");
+            AppConfig.chordState.getWarehouseDirs().forEach((dirName, dirContent) -> AppConfig.timestampedStandardPrint(dirName + ": " + dirContent));
 
         } catch (Exception e) {
             e.printStackTrace();

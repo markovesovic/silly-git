@@ -108,10 +108,6 @@ public class ChordState {
 		return valueMap;
 	}
 	
-	public void setValueMap(Map<Integer, Integer> valueMap) {
-		this.valueMap = valueMap;
-	}
-
 	public void setWarehouseFiles(Map<String, Map<Integer, List<String>>> warehouseFiles) {
 		this.warehouseFiles = warehouseFiles;
 	}
@@ -319,8 +315,7 @@ public class ChordState {
 	private final Map<String, Integer> currentFileVersionsInWorkingDir = new ConcurrentHashMap<>();
 
 	private Map<String, Map<Integer, List<String>>> warehouseFiles = new ConcurrentHashMap<>();
-//	private final Map<String, List<String>> warehouseDirectoryFiles = new ConcurrentHashMap<>();
-//	private final Map<String, List<String>> warehouseDirectoryDirectories = new ConcurrentHashMap<>();
+	private final Map<String, List<String>> warehouseDirs = new ConcurrentHashMap<>();
 
 	// My implementation
 	public void addFile(String filePath, List<String> content, int chordID) {
@@ -332,15 +327,19 @@ public class ChordState {
 
 			ServentInfo nextNode = getNextNodeForKey(chordID);
 			String notification;
-
-			if(warehouseFiles.containsKey(filePath)) {
-				notification = "File is already being tracked in system! Try commit";
+			if(filePath.endsWith("::dir")) {
+				warehouseDirs.put(filePath.replace("::dir", ""), content);
+				notification = "Dir successfully added";
 			} else {
-				notification = "File has been successfully added to system!";
+				if (warehouseFiles.containsKey(filePath)) {
+					notification = "File is already being tracked in system! Try commit";
+				} else {
+					notification = "File has been successfully added to system!";
 
-				Map<Integer, List<String>> newMap = new ConcurrentHashMap<>();
-				newMap.put(0, content);
-				warehouseFiles.put(filePath, newMap);
+					Map<Integer, List<String>> newMap = new ConcurrentHashMap<>();
+					newMap.put(0, content);
+					warehouseFiles.put(filePath, newMap);
+				}
 			}
 
 			AddFileResponseMessage addFileResponseMessage = new AddFileResponseMessage(AppConfig.myServentInfo, nextNode, notification, chordID);
@@ -353,24 +352,6 @@ public class ChordState {
 		AddFileMessage addFileMessage = new AddFileMessage(AppConfig.myServentInfo, nextNode, filePath, content, chordID);
 		MessageUtil.sendMessage(addFileMessage);
 	}
-
-	/*
-	public void addDirectory(String dirPath, List<String> files, List<String> dirs) {
-		int dirPathHash = (dirPath.hashCode() > 0 ? dirPath.hashCode() : -dirPath.hashCode()) % CHORD_SIZE;
-
-		if( isKeyMine(dirPathHash) ) {
-			if(warehouseDirectoryDirectories.containsKey(dirPath) || warehouseDirectoryFiles.containsKey(dirPath)) {
-				AppConfig.timestampedStandardPrint("Dir already in system");
-				return;
-			}
-
-			warehouseDirectoryFiles.put(dirPath, files);
-			warehouseDirectoryDirectories.put(dirPath, dirs);
-
-		}
-
-	}
-	*/
 
 	public void commitFile(String filePath, List<String> content, int version, int chordID) {
 		int filePathHash = (filePath.hashCode() > 0 ? filePath.hashCode() : -filePath.hashCode()) % CHORD_SIZE;
@@ -521,16 +502,18 @@ public class ChordState {
 	public void saveFileToFs(String filePath, List<String> content) {
 		try {
 			File file = new File(AppConfig.ROOT_PATH + filePath);
-			file.getParentFile().mkdirs();
+			if(file.getParentFile().mkdirs()) {
 
-			FileWriter fileWriter = new FileWriter(AppConfig.ROOT_PATH + filePath);
+				FileWriter fileWriter = new FileWriter(AppConfig.ROOT_PATH + filePath);
+				for(String row : content) {
+					fileWriter.write(row + System.lineSeparator());
+				}
 
-			for(String row : content) {
-				fileWriter.write(row + System.lineSeparator());
+				fileWriter.flush();
+				fileWriter.close();
 			}
 
-			fileWriter.flush();
-			fileWriter.close();
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -544,4 +527,7 @@ public class ChordState {
 		return warehouseFiles;
 	}
 
+	public Map<String, List<String>> getWarehouseDirs() {
+		return warehouseDirs;
+	}
 }

@@ -9,9 +9,6 @@ import servent.message.PullFileTellMessage;
 import servent.message.util.MessageUtil;
 import servent.response.PullFileResponse;
 
-import java.io.File;
-import java.io.FileWriter;
-
 public class PullFileTellHandler implements MessageHandler {
 
     private final Message message;
@@ -53,6 +50,7 @@ public class PullFileTellHandler implements MessageHandler {
 
             if(response.getVersion() == -1) {
                 AppConfig.timestampedStandardPrint("Node responded: " + response.getFilePath());
+                DistributedMutex.unlock();
                 return;
             }
 
