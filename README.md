@@ -1,2 +1,2 @@
-# kids_proj_marko_vesovic_rn2417
+# Silly Git
 Projekat iz konkurentnih i distribuiranih sistema 2021 - Silly git
